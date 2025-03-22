@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
@@ -30,6 +31,7 @@ public class Publicacion implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "persona_id", nullable = false) // Define la clave foránea
+	@JsonBackReference // Esto evita la recursión infinita
 	private Persona persona;
 	
 	private String titulo;

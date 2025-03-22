@@ -43,6 +43,11 @@ public class Persona implements Serializable{
 		this.telefono = telefono;
 	}
 
+	public Persona(Long id, String nombres, String apellidos, int edad, String email, String telefono) {
+		this(nombres, apellidos, edad, email, telefono);
+		this.id = id;
+	}
+	
 	/**
 	 * @return the id
 	 */
