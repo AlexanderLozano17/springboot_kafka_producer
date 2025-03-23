@@ -3,17 +3,19 @@ package com.demo.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.demo.entities.Comentario;
+import com.demo.dto.PersonaDTO;
 import com.demo.entities.Persona;
 
 public interface PersonaService {
 
 	Optional<Persona> guardar(Persona persona);
 	
-	Optional<Persona> obtenerPersonaPublicaciones(Long id);
+	Optional<Persona> obtenerPersonaPublicaciones(Long personaId);
 	
-	Optional<Persona> obtenerPersona(Long id);
+	Optional<PersonaDTO> obtenerPersonaId(Long id);
 	
-	List<Persona> obtenerTodo();
+	List<PersonaDTO> obtenerPersonas();
 
+	boolean eliminarId(Long id);
+	
 }

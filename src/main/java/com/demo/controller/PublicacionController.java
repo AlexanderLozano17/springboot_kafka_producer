@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.dto.PublicacionDTO;
+import com.demo.entities.Persona;
 import com.demo.entities.Publicacion;
 import com.demo.services.PublicacionService;
 
 @RestController
-@RequestMapping("/api/publicacion")
+@RequestMapping("/api/publicaciones")
 public class PublicacionController {
 	
 	@Autowired
@@ -34,9 +36,9 @@ public class PublicacionController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Publicacion> obtenerId(@PathVariable Long id) {
+	public ResponseEntity<PublicacionDTO> obtenerPublicacionId(@PathVariable Long id) {
 		try {
-			Optional<Publicacion> publicacion = publicacionService.obtenerId(id);
+			Optional<PublicacionDTO> publicacion = publicacionService.obtenerPublicacionId(id);
 			if (publicacion.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(publicacion.get());
 			}
@@ -49,15 +51,17 @@ public class PublicacionController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Publicacion>> obtenerId() {
+	public ResponseEntity<List<PublicacionDTO>> obtenerPublicaciones() {
 		try {
-			Optional<List<Publicacion>> listaPublicaciones = Optional.of(publicacionService.obtenerTodo());
-			return ResponseEntity.status(HttpStatus.OK).body(listaPublicaciones.get());			
+			List<PublicacionDTO> publicacion = publicacionService.obtenerPublicaciones();
+			if (!publicacion.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.OK).body(publicacion);
+			}
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-	}
-	
+	}	
 }

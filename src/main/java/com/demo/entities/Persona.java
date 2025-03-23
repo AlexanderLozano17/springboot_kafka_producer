@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,28 +27,14 @@ public class Persona implements Serializable{
 	private String email;
 	private String telefono;
 	
-	@OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "persona", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Publicacion> publicaciones;
 	
-	@OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "persona", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comentario> comentarios;
 	
 	public Persona() {}
-	
-	public Persona(String nombres, String apellidos, int edad, String email, String telefono) {
-		super();
-		this.nombres = nombres;
-		this.apellidos = apellidos;
-		this.edad = edad;
-		this.email = email;
-		this.telefono = telefono;
-	}
-
-	public Persona(Long id, String nombres, String apellidos, int edad, String email, String telefono) {
-		this(nombres, apellidos, edad, email, telefono);
-		this.id = id;
-	}
-	
+		
 	/**
 	 * @return the id
 	 */
