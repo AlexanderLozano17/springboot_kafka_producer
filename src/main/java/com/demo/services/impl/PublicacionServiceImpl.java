@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demo.dto.PublicacionDTO;
+import com.demo.entities.Persona;
 import com.demo.entities.Publicacion;
 import com.demo.repositories.PublicacionRepository;
 import com.demo.services.PublicacionService;
@@ -29,15 +31,15 @@ public class PublicacionServiceImpl implements PublicacionService {
 	}
 
 	@Override
-	public Optional<Publicacion> obtenerId(Long id) {
+	public Optional<PublicacionDTO> obtenerPublicacionId(Long id) {
 		// TODO Auto-generated method stub
-		return publicacionRepository.findById(id);
+		return publicacionRepository.obtenerPublicacionId(id);
 	}
 
 	@Override
-	public List<Publicacion> obtenerTodo() {
+	public List<PublicacionDTO> obtenerPublicaciones() {
 		// TODO Auto-generated method stub
-		return publicacionRepository.findAll();
+		return publicacionRepository.obtenerPublicaciones();
 	}
-
+	
 }

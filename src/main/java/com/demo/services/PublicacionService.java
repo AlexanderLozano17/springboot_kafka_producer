@@ -3,14 +3,16 @@ package com.demo.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.demo.dto.PublicacionDTO;
+import com.demo.entities.Persona;
 import com.demo.entities.Publicacion;
 
 public interface PublicacionService {
 	
 	Optional<Publicacion> guardar(Publicacion publicacion);
 	
-	Optional<Publicacion> obtenerId(Long id);
+	Optional<PublicacionDTO> obtenerPublicacionId(Long id);
 	
-	List<Publicacion> obtenerTodo();
+	List<PublicacionDTO> obtenerPublicaciones();
 
 }

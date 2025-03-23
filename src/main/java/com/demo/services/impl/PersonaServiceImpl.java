@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.demo.dto.PersonaDTO;
 import com.demo.entities.Persona;
 import com.demo.repositories.PersonaRepository;
 import com.demo.services.PersonaService;
@@ -29,21 +31,38 @@ public class PersonaServiceImpl implements PersonaService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<Persona> obtenerPersonaPublicaciones(Long id) {
 		// TODO Auto-generated method stub
 		return personaRepository.findById(id);
 	}
 
 	@Override
-	public List<Persona> obtenerTodo() {
+	@Transactional(readOnly = true)
+	public List<PersonaDTO> obtenerPersonas() {
 		// TODO Auto-generated method stub
-		return personaRepository.findAll();
+		return personaRepository.obtenerPersonas();
 	}
 
 	@Override
-	public Optional<Persona> obtenerPersona(Long id) {
+	public Optional<PersonaDTO> obtenerPersonaId(Long id) {
 		// TODO Auto-generated method stub
 		return personaRepository.findPersonaBasicById(id);
+	}
+	
+	@Override
+	public boolean eliminarId(Long id) {
+		
+		if (!personaRepository.existsById(id))  return false;		
+		try {
+			personaRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 	
 }
