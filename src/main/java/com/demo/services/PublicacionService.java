@@ -14,5 +14,7 @@ public interface PublicacionService {
 	Optional<PublicacionDTO> obtenerPublicacionId(Long id);
 	
 	List<PublicacionDTO> obtenerPublicaciones();
+	
+	Optional<Publicacion> obtenerPublicacionPersona(Long id);
 
 }

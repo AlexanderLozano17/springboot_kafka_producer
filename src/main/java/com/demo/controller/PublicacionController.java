@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.dto.PublicacionDTO;
-import com.demo.entities.Persona;
 import com.demo.entities.Publicacion;
 import com.demo.services.PublicacionService;
 
@@ -64,4 +63,19 @@ public class PublicacionController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}	
+	
+	@GetMapping("/persona/{publicacionId}")
+	public ResponseEntity<Publicacion> obtenerPublicacionPersona(@PathVariable Long publicacionId) {
+		try {
+			Optional<Publicacion> publicacion = publicacionService.obtenerPublicacionPersona(publicacionId);
+			if (publicacion.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(publicacion.get());
+			}
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();				
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }
