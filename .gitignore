@@ -44,6 +44,7 @@ Thumbs.db
 
 # Permitir properties.yml
 !properties.yml
+!application.yml
 
 # Ignorar todos los archivos .yml excepto properties.yml
 *.yml
