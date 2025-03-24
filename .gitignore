@@ -42,7 +42,10 @@ Thumbs.db
 # JUnit output
 /test-logs/
 
-# Local configuration files
+# Permitir properties.yml
+!properties.yml
+
+# Ignorar todos los archivos .yml excepto properties.yml
 *.yml
 application-*.yml
 
