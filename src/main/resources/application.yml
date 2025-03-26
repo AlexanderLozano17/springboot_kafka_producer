@@ -1,0 +1,68 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: SpringBoot_And_ApacheKafka
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafkadb
+    username: root
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+    producer:
+      acks: all
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# 🔹 **Configuración específica para el entorno de desarrollo**
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafkadb
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  kafka:
+    consumer:
+      group-id: dev-group
+
+---
+# 🔹 **Configuración específica para el entorno de producción**
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://prod-db-host:5432/prod_db
+    username: 12345
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  kafka:
+    consumer:
+      group-id: prod-group

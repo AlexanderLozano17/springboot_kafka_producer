@@ -1,54 +1,76 @@
-# Compiled class files
+# ===========================
+# 🔹 Archivos compilados
+# ===========================
 *.class
-
-# Log files
-*.log
-
-# Maven directory
-/.mvn
-/mvnw
-/mvnw.cmd
-
-# Gradle directory
-.gradle/
-/build/
-/out/
-
-# IntelliJ IDEA
-.idea/
-*.iml
-
-# Eclipse project files
-.project
-.classpath
-.settings/
-.factorypath
-
-# Spring Boot specific
-target/
 *.jar
 *.war
 *.ear
 
+# ===========================
+# 🔹 Directorios de construcción
+# ===========================
+/target/
+.build/
+.out/
+
+# ===========================
+# 🔹 Dependencias de Maven y Gradle
+# ===========================
+/.mvn/
+/mvnw
+/mvnw.cmd
+/.gradle/
+.gradle/
+
+# ===========================
+# 🔹 Configuración de IDEs
+# ===========================
+# IntelliJ IDEA
+/.idea/
+/*.iml
+
+# Eclipse
+/.project
+/.classpath
+/.settings/
+/.factorypath
+
 # VS Code
-.vscode/
+/.vscode/
 
-# Mac system files
-.DS_Store
-
-# Windows system files
-Thumbs.db
-
-# JUnit output
+# ===========================
+# 🔹 Archivos de logs y pruebas
+# ===========================
+*.log
 /test-logs/
 
-# Permitir properties.yml
-!properties.yml
-!application.yml
+# ===========================
+# 🔹 Archivos específicos del sistema operativo
+# ===========================
+# MacOS
+.DS_Store
 
-# Ignorar todos los archivos .yml excepto properties.yml
-*.yml
-application-*.yml
+# Windows
+Thumbs.db
+desktop.ini
 
-# paquetes
-.gz
+# Linux
+*.swp
+
+# ===========================
+# 🔹 Docker y Configuración
+# ===========================
+!docker-compose.yml  # Permitir el archivo principal de Docker Compose
+!docker-compose*.yml # Permitir variantes como docker-compose.override.yml
+!.dockerignore       # Permitir el archivo .dockerignore
+
+# ===========================
+# 🔹 Spring Boot y Configuración YAML
+# ===========================
+!application.yml  # Permitir el archivo principal de configuración
+!application-*.yml # Permitir todas las variantes de application.yml
+
+# ===========================
+# 🔹 Otros
+# ===========================
+*.gz # Ignorar archivos comprimidos
