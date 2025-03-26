@@ -1,0 +1,17 @@
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/dto/PersonaDTO.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/ComentarioService.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/impl/PersonaServiceImpl.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/repositories/PersonaRepository.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/repositories/PublicacionRepository.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/entities/Comentario.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/entities/Publicacion.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/entities/Mensaje.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/impl/ComentarioServiceImpl.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/entities/Persona.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/repositories/MensajeRepository.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/PublicacionService.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/impl/PublicacionServiceImpl.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/services/PersonaService.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/ModuleCoreApplication.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/dto/PublicacionDTO.java
+/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/module-core/src/main/java/com/demo/core/repositories/ComentarioRepository.java
