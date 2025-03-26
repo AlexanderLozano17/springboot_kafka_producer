@@ -1,0 +1,5 @@
+com/demo/main/MainApplication.class
+com/demo/main/controller/PersonaController.class
+com/demo/main/controller/PublicacionController.class
+com/demo/main/controller/ComentarioController.class
+com/demo/main/controller/KafkaController.class

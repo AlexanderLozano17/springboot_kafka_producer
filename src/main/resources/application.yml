@@ -49,20 +49,3 @@ spring:
   kafka:
     consumer:
       group-id: dev-group
-
----
-# 🔹 **Configuración específica para el entorno de producción**
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    url: jdbc:postgresql://prod-db-host:5432/prod_db
-    username: 12345
-    password: 12345
-  jpa:
-    hibernate:
-      ddl-auto: validate
-  kafka:
-    consumer:
-      group-id: prod-group

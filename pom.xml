@@ -11,10 +11,9 @@
     <packaging>pom</packaging>
 
     <modules>
+		<module>main-app</module>  
         <module>module-core</module>       
         <module>module-producer</module>
-        <module>module-consumer</module>
-        <module>module-api</module>
     </modules>
 
     <properties>

@@ -1,3 +1,2 @@
 com/demo/producer/services/KafkaProducerService.class
 com/demo/producer/services/impl/KafkaProducerServiceImpl.class
-com/demo/producer/ModuleProducerApplication.class
