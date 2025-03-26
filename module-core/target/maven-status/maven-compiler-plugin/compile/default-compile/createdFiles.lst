@@ -3,7 +3,6 @@ com/demo/core/services/impl/PublicacionServiceImpl.class
 com/demo/core/services/PublicacionService.class
 com/demo/core/entities/Comentario.class
 com/demo/core/repositories/ComentarioRepository.class
-com/demo/core/ModuleCoreApplication.class
 com/demo/core/entities/Persona.class
 com/demo/core/services/ComentarioService.class
 com/demo/core/services/impl/PersonaServiceImpl.class

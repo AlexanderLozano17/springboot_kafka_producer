@@ -1,6 +1,5 @@
 package com.demo.core.services.impl;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.core.entities.Comentario;
-import com.demo.core.entities.Persona;
 import com.demo.core.repositories.ComentarioRepository;
-import com.demo.core.repositories.PersonaRepository;
 import com.demo.core.services.ComentarioService;
 
 @Service
@@ -18,10 +15,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 	
 	@Autowired
 	private ComentarioRepository comentarioRepository;
-	
-	@Autowired
-	private PersonaRepository personaRepository;
-	
+		
 	@Override
 	public Optional<Comentario> guardar(Comentario comentario) {
 		// TODO Auto-generated method stub
@@ -45,10 +39,4 @@ public class ComentarioServiceImpl implements ComentarioService {
 		// TODO Auto-generated method stub
 		return comentarioRepository.findAll();
 	}
-//	
-//	public List<Comentario> obtenerComentariosPorPersona(Long personaId) {
-//		Optional<Persona> persona = personaRepository.findById(personaId);
-//		return persona.map(comentarioRepository::findByPersona).orElse(Collections.emptyList());
-//	}
-
 }
