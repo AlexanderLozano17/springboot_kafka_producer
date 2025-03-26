@@ -1,55 +1,60 @@
 version: '3.9'
 services:
+  # Contenedor Zookeeper: Es un servicio de coordinación distribuida que Kafka utiliza para gestionar el clúster de brokers.
   zookeeper:
     image: bitnami/zookeeper:latest
     container_name: zookeeper
     restart: always
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ALLOW_ANONYMOUS_LOGIN=yes  # Permite conexiones sin autenticación
     ports:
-      - "2181:2181"
+      - "2181:2181"  # Puerto para comunicarse con Kafka
     networks:
       - kafka_network
     volumes:
-      - zookeeper:/bitnami/zookeeper
+      - zookeeper:/bitnami/zookeeper  # Persistencia de datos de Zookeeper
 
+  # Contenedor Kafka: Es el broker que gestiona la mensajería y la transmisión de eventos en tiempo real.
   kafka:
     image: bitnami/kafka:latest
     container_name: kafka
     restart: always
     depends_on:
-      - zookeeper
+      - zookeeper  # Espera a que Zookeeper esté disponible antes de iniciar
     ports:
-      - "9092:9092"
+      - "9092:9092"  # Puerto donde Kafka escucha las conexiones
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181  # Conecta con Zookeeper
+      - ALLOW_PLAINTEXT_LISTENER=yes  # Permite conexiones sin cifrar
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092  # Configura el listener de Kafka
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092  # Dirección usada por clientes externos
     networks:
       - kafka_network
     volumes:
-      - kafka:/bitnami/kafka
+      - kafka:/bitnami/kafka  # Persistencia de datos de Kafka
 
+  # Contenedor Kafka-UI: Es una interfaz web para visualizar y gestionar Kafka.
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Puerto para acceder a la interfaz web
     environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_NAME: local  # Nombre del clúster en la interfaz
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092  # Dirección del broker de Kafka
     depends_on:
-      - kafka
+      - kafka  # Espera a que Kafka esté disponible antes de iniciar
     networks:
       - kafka_network
     volumes:
-      - kafka-ui-data:/config  
+      - kafka-ui-data:/config  # Persistencia de la configuración de la interfaz
 
+# Red personalizada para la comunicación entre contenedores
 networks:
   kafka_network:
-    driver: bridge  # Define una sola red personalizada
+    driver: bridge  
 
+# Volúmenes para la persistencia de datos
 volumes:
   zookeeper:
   kafka:
