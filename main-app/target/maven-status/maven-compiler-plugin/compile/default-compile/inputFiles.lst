@@ -1,5 +1,4 @@
-/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/main-app/src/main/java/com/demo/main/controller/PublicacionController.java
-/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/main-app/src/main/java/com/demo/main/controller/KafkaController.java
-/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/main-app/src/main/java/com/demo/main/controller/ComentarioController.java
-/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/main-app/src/main/java/com/demo/main/MainApplication.java
-/home/jlozano/eclipse-workspace/SpringBoot_And_ApacheKafka/main-app/src/main/java/com/demo/main/controller/PersonaController.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/main-app/src/main/java/com/demo/main/controller/ComentarioController.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/main-app/src/main/java/com/demo/main/controller/PublicacionController.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/main-app/src/main/java/com/demo/main/MainApp.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/main-app/src/main/java/com/demo/main/controller/PersonaController.java

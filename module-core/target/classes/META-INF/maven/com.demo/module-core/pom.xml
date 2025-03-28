@@ -8,11 +8,10 @@
     <!-- Referencia al proyecto padre -->
    <parent>
 	    <groupId>com.demo</groupId>
-	    <artifactId>SpringBoot_And_ApacheKafka</artifactId>
+	    <artifactId>springboot_kafka_producer</artifactId>
 	    <version>0.0.1-SNAPSHOT</version>
 	    <relativePath>../pom.xml</relativePath>  <!-- IMPORTANTE -->
 	</parent>
-
 
     <artifactId>module-core</artifactId>
     <name>module-core</name>
@@ -47,7 +46,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>

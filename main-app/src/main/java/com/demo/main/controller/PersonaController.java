@@ -38,7 +38,7 @@ public class PersonaController {
 	@GetMapping("/{id}/detalle-basico")
 	public ResponseEntity<PersonaDTO> obtenerPersona(@PathVariable Long id) {
 		try {
-			Optional<PersonaDTO> persona = personaService.obtenerPersonaId(id);
+			Optional<PersonaDTO> persona = personaService.obtenerId(id);
 			if (persona.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(persona.get());
 			} 
@@ -53,7 +53,7 @@ public class PersonaController {
 	@GetMapping
 	public ResponseEntity<List<PersonaDTO>> obtenerPersonas() {		
 		try {
-			List<PersonaDTO> listaPersonas = personaService.obtenerPersonas();
+			List<PersonaDTO> listaPersonas = personaService.obtener();
 			return ResponseEntity.status(HttpStatus.OK).body(listaPersonas);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -72,12 +72,27 @@ public class PersonaController {
 		}
 	}
 	
-	@GetMapping("/publicaciones/{personaId}")
-	public ResponseEntity<Persona> obtenerPersonaPublicaciones(@PathVariable Long personaId) {
+	@GetMapping("/{personaId}/publicaciones")
+	public ResponseEntity<Persona> obtenerPersonaIdPublicaciones(@PathVariable Long personaId) {
 		try {			
-			Optional<Persona> personaPublicaciones = personaService.obtenerPersonaPublicaciones(personaId);
+			Optional<Persona> personaPublicaciones = personaService.obtenerPersonaIdPublicaciones(personaId);
 			if (personaPublicaciones.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(personaPublicaciones.get());	
+			}
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@GetMapping("/publicaciones")
+	public ResponseEntity<List<Persona>> obtenerPersonaPublicaciones() {
+		try {			
+			List<Persona> personaPublicaciones = personaService.obtenerPersonaPublicaciones();
+			if (!personaPublicaciones.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.OK).body(personaPublicaciones);	
 			}
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {

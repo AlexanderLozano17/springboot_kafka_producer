@@ -10,11 +10,13 @@ public interface PersonaService {
 
 	Optional<Persona> guardar(Persona persona);
 	
-	Optional<Persona> obtenerPersonaPublicaciones(Long personaId);
+	Optional<Persona> obtenerPersonaIdPublicaciones(Long personaId);
 	
-	Optional<PersonaDTO> obtenerPersonaId(Long id);
+	List<Persona> obtenerPersonaPublicaciones();
 	
-	List<PersonaDTO> obtenerPersonas();
+	Optional<PersonaDTO> obtenerId(Long id);
+	
+	List<PersonaDTO> obtener();
 
 	boolean eliminarId(Long id);
 	

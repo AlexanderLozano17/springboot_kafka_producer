@@ -1,5 +1,6 @@
 package com.demo.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,20 +33,26 @@ public class PersonaServiceImpl implements PersonaService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Persona> obtenerPersonaPublicaciones(Long id) {
+	public Optional<Persona> obtenerPersonaIdPublicaciones(Long id) {
 		// TODO Auto-generated method stub
 		return personaRepository.findById(id);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Persona> obtenerPersonaPublicaciones() {
+		// TODO Auto-generated method stub
+		return personaRepository.findAll();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<PersonaDTO> obtenerPersonas() {
+	public List<PersonaDTO> obtener() {
 		// TODO Auto-generated method stub
 		return personaRepository.obtenerPersonas();
 	}
 
 	@Override
-	public Optional<PersonaDTO> obtenerPersonaId(Long id) {
+	public Optional<PersonaDTO> obtenerId(Long id) {
 		// TODO Auto-generated method stub
 		return personaRepository.findPersonaBasicById(id);
 	}

@@ -1,0 +1,45 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /springboot-kafka
+
+spring:
+  application:
+    name: springboot-kafka
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafkadb
+    username: root
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+    producer:
+      acks: all
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    mappings:
+      enabled: true

@@ -35,8 +35,22 @@ public class ComentarioServiceImpl implements ComentarioService {
 	}
 
 	@Override
-	public List<Comentario> obtenerTodo() {
+	public List<Comentario> obtener() {
 		// TODO Auto-generated method stub
 		return comentarioRepository.findAll();
+	}
+
+	@Override
+	public boolean eliminar(Long id) {
+		// TODO Auto-generated method stub
+		try {
+			if (!comentarioRepository.existsById(id)) return false;
+			comentarioRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
