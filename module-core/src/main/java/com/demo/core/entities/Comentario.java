@@ -34,11 +34,14 @@ public class Comentario implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate fechaComentario;
 	
+	private String comentario;
+	
 	public Comentario() {}
 	
-    public Comentario(Publicacion publicacion, Persona persona) {
+    public Comentario(Publicacion publicacion, Persona persona, String comentario) {
         this.publicacion = publicacion;
         this.persona = persona;
+        this.comentario = comentario;
         this.fechaComentario = LocalDate.now(); // Fecha por defecto al crear
     }
 
@@ -96,6 +99,20 @@ public class Comentario implements Serializable {
 	 */
 	public void setPersona(Persona persona) {
 		this.persona = persona;
+	}
+
+	/**
+	 * @return the comentario
+	 */
+	public String getComentario() {
+		return comentario;
+	}
+
+	/**
+	 * @param comentario the comentario to set
+	 */
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
 	}
 	
 }

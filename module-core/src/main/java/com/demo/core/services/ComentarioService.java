@@ -11,6 +11,8 @@ public interface ComentarioService {
 	
 	Optional<Comentario> obtenerId(Long id);
 	
-	List<Comentario> obtenerTodo();
+	List<Comentario> obtener();
+	
+	boolean eliminar(Long id);
 	
 }
