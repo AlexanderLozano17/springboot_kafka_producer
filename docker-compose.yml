@@ -15,23 +15,43 @@ services:
       - zookeeper:/bitnami/zookeeper  # Persistencia de datos de Zookeeper
 
   # Contenedor Kafka: Es el broker que gestiona la mensajería y la transmisión de eventos en tiempo real.
-  kafka:
+  kafka1:
     image: bitnami/kafka:latest
-    container_name: kafka
+    container_name: kafka1
     restart: always
     depends_on:
       - zookeeper  # Espera a que Zookeeper esté disponible antes de iniciar
     ports:
       - "9092:9092"  # Puerto donde Kafka escucha las conexiones
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181  # Conecta con Zookeeper
-      - ALLOW_PLAINTEXT_LISTENER=yes  # Permite conexiones sin cifrar
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092  # Configura el listener de Kafka
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092  # Dirección usada por clientes externos
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conecta con Zookeeper
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT # Define los protocolos de seguridad que se usarán en los listeners de Kafka. Aquí, PLAINTEXT:PLAINTEXT indica que la comunicación será en texto plano (sin cifrado ni autenticación).
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092  # En este caso, el broker anuncia su dirección como PLAINTEXT://kafka2:9093, lo que significa que los clientes deben conectarse a kafka2 en el puerto 9093 usando texto plano
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2  # Define el factor de replicación del tópico especial __consumer_offsets, donde Kafka almacena los desplazamientos (offsets) de los consumidores. Un valor de 2 significa que los datos de este tópico se replicarán en dos brokers, proporcionando tolerancia a fallos   
     networks:
       - kafka_network
     volumes:
-      - kafka:/bitnami/kafka  # Persistencia de datos de Kafka
+      - kafka1_data:/bitnami/kafka  # Persistencia de datos de Kafka
+      
+  # Contenedor Kafka1: Es el broker que gestiona la mensajería y la transmisión de eventos en tiempo real.
+  kafka2:
+    image: bitnami/kafka:latest
+    container_name: kafka2
+    depends_on:
+      - zookeeper # Espera a que Zookeeper esté disponible antes de iniciar
+    ports:
+      - "9093:9093" # Puerto donde Kafka escucha las conexiones
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conecta con Zookeeper
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT # Define los protocolos de seguridad que se usarán en los listeners de Kafka. Aquí, PLAINTEXT:PLAINTEXT indica que la comunicación será en texto plano (sin cifrado ni autenticación).
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9093 # En este caso, el broker anuncia su dirección como PLAINTEXT://kafka2:9093, lo que significa que los clientes deben conectarse a kafka2 en el puerto 9093 usando texto plano
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2 # Define el factor de replicación del tópico especial __consumer_offsets, donde Kafka almacena los desplazamientos (offsets) de los consumidores. Un valor de 2 significa que los datos de este tópico se replicarán en dos brokers, proporcionando tolerancia a fallos
+    networks:
+      - kafka_network
+    volumes:
+      - kafka2_data:/bitnami/kafka  # Persistencia de datos de Kafka
 
   # Contenedor Kafka-UI: Es una interfaz web para visualizar y gestionar Kafka.
   kafka-ui:
@@ -41,9 +61,10 @@ services:
       - "8080:8080"  # Puerto para acceder a la interfaz web
     environment:
       KAFKA_CLUSTERS_0_NAME: local  # Nombre del clúster en la interfaz
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092  # Dirección del broker de Kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092,kafka:9093  # Dirección del broker de Kafka
     depends_on:
-      - kafka  # Espera a que Kafka esté disponible antes de iniciar
+      - kafka1  # Espera a que Kafka esté disponible antes de iniciar
+      - kafka2  # Espera a que Kafka esté disponible antes de iniciar
     networks:
       - kafka_network
     volumes:
@@ -57,5 +78,6 @@ networks:
 # Volúmenes para la persistencia de datos
 volumes:
   zookeeper:
-  kafka:
+  kafka1_data:
+  kafka2_data:
   kafka-ui-data:

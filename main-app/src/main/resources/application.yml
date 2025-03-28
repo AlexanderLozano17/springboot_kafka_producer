@@ -22,10 +22,7 @@ spring:
       hibernate.format_sql: true
 
   kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: my-group
-      auto-offset-reset: earliest
+    bootstrap-servers: localhost:9092 # Dirección del broker de Kafka
     producer:
       acks: all
 
