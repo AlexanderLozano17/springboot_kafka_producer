@@ -16,6 +16,7 @@ public class KafkaProperties {
     private boolean enableIdempotence;
     private String keySerializer;
     private String valueSerializer;
+    
 	/**
 	 * @return the bootstrapServers
 	 */

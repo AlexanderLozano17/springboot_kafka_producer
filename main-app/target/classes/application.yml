@@ -22,12 +22,16 @@ spring:
       hibernate.format_sql: true
 
   kafka:
-    bootstrap-servers: localhost:9092 # Dirección del broker de Kafka
+    bootstrap-servers: kafka1:9092,kafka2:9093 # Dirección de los broker de Kafka
+    topic:
+      name: test-topic
+      partitions: 2 
+      replicas: 2
     producer:
       retries: 5  # Número de reintentos en caso de fallo al enviar un mensaje.
-      batch-size: 16384  # Tamaño máximo del lote antes de enviarlo.
-      buffer-memory: 33554432  # Memoria máxima utilizada por el buffer del productor.
-      linger-ms: 10  # Tiempo en milisegundos antes de enviar un lote de mensajes.
+      batch-size: 4096  # Tamaño máximo del lote antes de enviarlo.
+      buffer-memory: 1048576  # Memoria máxima utilizada por el buffer del productor.
+      linger-ms: 1  # Tiempo en milisegundos antes de enviar un lote de mensajes.
       acks: all  # Se confirma el mensaje en todos los nodos para mayor confiabilidad.
       enable-idempotence: true  # Evita duplicados asegurando la idempotencia.
       key-serializer: org.apache.kafka.common.serialization.StringSerializer  # Serializador para la clave.
