@@ -27,12 +27,12 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conexión con Zookeeper
 
       # Configuración de los listeners (definen cómo Kafka acepta conexiones)
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://host.docker.internal:29092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
       # - INTERNAL: Para conexiones internas dentro del contenedor
       # - EXTERNAL: Para conexiones externas fuera del contenedor
 
       #  Direcciones que Kafka anuncia a los clientes para conectarse
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://host.docker.internal:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://host.docker.interna:29092
       # - INTERNAL: Se usa dentro de la red de Docker con el nombre `kafka1`
       # - EXTERNAL: Se usa fuera de Docker con la IP de la máquina `192.168.1.21`
 
@@ -70,7 +70,7 @@ services:
       # - EXTERNAL: Para conexiones externas fuera del contenedor
 
       # Direcciones que Kafka anuncia a los clientes para conectarse
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9093,EXTERNAL://192.168.1.21:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9093,EXTERNAL://host.docker.internal:29093
       # - INTERNAL: Se usa dentro de la red de Docker con el nombre `kafka2`
       # - EXTERNAL: Se usa fuera de Docker con la IP de la máquina `192.168.1.21`
 
