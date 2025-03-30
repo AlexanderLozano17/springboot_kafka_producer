@@ -67,7 +67,6 @@ desktop.ini
 # ===========================
 # 🔹 Spring Boot y Configuración YAML
 # ===========================
-!application.yml  # Permitir el archivo principal de configuración
 !application-*.yml # Permitir todas las variantes de application.yml
 
 # ===========================
@@ -85,13 +84,13 @@ desktop.ini
 # Excepción: No ignorar .env-template
 # ===========================
 !.env-template
-!.application-template.yml
+!application-template.yml
 
 # ===========================
 # 🔹 Otros
 # ===========================
 *.gz # Ignorar archivos comprimidos
-.application.yml
+application.yml
 
 
 
