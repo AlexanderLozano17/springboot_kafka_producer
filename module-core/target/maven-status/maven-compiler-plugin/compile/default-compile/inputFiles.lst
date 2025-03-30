@@ -9,6 +9,7 @@
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/services/impl/PersonaServiceImpl.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/services/PersonaService.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/services/impl/PublicacionServiceImpl.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/ModuleCoreConfig.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/repositories/ComentarioRepository.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/dto/PersonaDTO.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-core/src/main/java/com/demo/core/services/ComentarioService.java

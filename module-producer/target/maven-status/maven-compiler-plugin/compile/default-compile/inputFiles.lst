@@ -1,2 +1,5 @@
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-producer/src/main/java/com/demo/producer/services/impl/KafkaProducerServiceImpl.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/module-producer/src/main/java/com/demo/producer/config/KafkaProducerConfig.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/module-producer/src/main/java/com/demo/producer/config/KafkaProperties.java
 /home/jlozano/eclipse-workspace/springboot_kafka_producer/module-producer/src/main/java/com/demo/producer/services/KafkaProducerService.java
+/home/jlozano/eclipse-workspace/springboot_kafka_producer/module-producer/src/main/java/com/demo/producer/ModuleProducerConfig.java

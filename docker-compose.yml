@@ -1,11 +1,11 @@
 version: '3.9'
 services:
-  # Contenedor Zookeeper: Es un servicio de coordinación distribuida que Kafka utiliza para gestionar el clúster de brokers.
+  # Contenedor Zookeeper: Es un servicio de coordinacion distribuida que Kafka utiliza para gestionar el cluster de brokers.
   zookeeper:
     image: bitnami/zookeeper:latest
     container_name: zookeeper
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes  # Permite conexiones sin autenticación
+      - ALLOW_ANONYMOUS_LOGIN=yes  # Permite conexiones sin autenticacion
     ports:
       - "2181:2181"  # Puerto para comunicarse con Kafka
     networks:
@@ -13,77 +13,79 @@ services:
     volumes:
       - zookeeper:/bitnami/zookeeper  # Persistencia de datos de Zookeeper
 
-  # Contenedor Kafka: Es el broker que gestiona la mensajería y la transmisión de eventos en tiempo real.
+  # Contenedor Kafka: Es el broker que gestiona la mensajeria y la transmision de eventos en tiempo real.
   kafka1:
     image: bitnami/kafka:latest
     container_name: kafka1
     depends_on:
-      - zookeeper  # Kafka no inicia hasta que Zookeeper esté listo
+      - zookeeper  # Kafka no inicia hasta que Zookeeper este listo
+    command: ["sh", "-c", "sleep 10 && /opt/bitnami/scripts/kafka/run.sh"] # Retrasa el arranque de Kafka
     ports:
       - "9092:9092"  # Puerto para conexiones internas
       - "29092:29092" # Puerto para conexiones externas
     environment:     
-      KAFKA_BROKER_ID: 1  # Identificación del broker
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conexión con Zookeeper
+      KAFKA_BROKER_ID: 1  # Identificacion del broker
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conexion con Zookeeper
 
-      # Configuración de los listeners (definen cómo Kafka acepta conexiones)
+      # Configuracion de los listeners (definen como Kafka acepta conexiones)
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
       # - INTERNAL: Para conexiones internas dentro del contenedor
       # - EXTERNAL: Para conexiones externas fuera del contenedor
 
       #  Direcciones que Kafka anuncia a los clientes para conectarse
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://host.docker.interna:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://${KAFKA_HOST_IP}:29092
       # - INTERNAL: Se usa dentro de la red de Docker con el nombre `kafka1`
-      # - EXTERNAL: Se usa fuera de Docker con la IP de la máquina `192.168.1.21`
+      # - EXTERNAL: Se usa fuera de Docker con la IP de la maquina `KAFKA_HOST_IP`
 
-      #  Define qué protocolo usa cada listener (solo texto plano en este caso)
+      #  Define que protocolo usa cada listener (solo texto plano en este caso)
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
 
-      # Listener usado para la comunicación entre brokers
+      # Listener usado para la comunicacion entre brokers
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
 
-      #  Configuración de replicación (para alta disponibilidad)
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2 # Réplicas del tópico __consumer_offsets
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2       # Réplicas por defecto en nuevos tópicos
-      KAFKA_MIN_INSYNC_REPLICAS: 1              # Mínimo de réplicas sincronizadas antes de aceptar un mensaje
+      #  Configuracion de replicacion (para alta disponibilidad)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2 # Replicas del topico __consumer_offsets
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2       # Replicas por defecto en nuevos topicos
+      KAFKA_MIN_INSYNC_REPLICAS: 1              # Minimo de replicas sincronizadas antes de aceptar un mensaje
     networks:
       - kafka_network
     volumes:
       - kafka1_data:/bitnami/kafka  # Persistencia de datos de Kafka
       
-  # Contenedor Kafka2: Es el broker que gestiona la mensajería y la transmisión de eventos en tiempo real.
+  # Contenedor Kafka2: Es el broker que gestiona la mensajeria y la transmision de eventos en tiempo real.
   kafka2:
     image: bitnami/kafka:latest
     container_name: kafka2
     depends_on:
-      - zookeeper  # Kafka no iniciará hasta que Zookeeper esté listo
+      - zookeeper  # Kafka no iniciara hasta que Zookeeper este listo
+    command: ["sh", "-c", "sleep 10 && /opt/bitnami/scripts/kafka/run.sh"] # Retrasa el arranque de Kafka
     ports:
       - "9093:9093"  # Puerto para conexiones internas
       - "29093:29093" # Puerto para conexiones externas
     environment:
-      KAFKA_BROKER_ID: 2 # Identificación del broker
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 # Conexión con Zookeeper
+      KAFKA_BROKER_ID: 2 # Identificacion del broker
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 # Conexion con Zookeeper
 
-      # Configuración de los listeners (definen cómo Kafka acepta conexiones)
+      # Configuracion de los listeners (definen como Kafka acepta conexiones)
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9093,EXTERNAL://0.0.0.0:29093
       # - INTERNAL: Para conexiones internas dentro del contenedor
       # - EXTERNAL: Para conexiones externas fuera del contenedor
 
       # Direcciones que Kafka anuncia a los clientes para conectarse
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9093,EXTERNAL://host.docker.internal:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9093,EXTERNAL://${KAFKA_HOST_IP}:29093
       # - INTERNAL: Se usa dentro de la red de Docker con el nombre `kafka2`
-      # - EXTERNAL: Se usa fuera de Docker con la IP de la máquina `192.168.1.21`
+      # - EXTERNAL: Se usa fuera de Docker con la IP de la maquina `KAFKA_HOST_IP`
 
-      # Define qué protocolo usa cada listener (solo texto plano en este caso)
+      # Define que protocolo usa cada listener (solo texto plano en este caso)
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
 
-      # Listener usado para la comunicación entre brokers
+      # Listener usado para la comunicacion entre brokers
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
 
-      # Configuración de replicación (para alta disponibilidad)
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2 # Réplicas del tópico __consumer_offsets
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2       # Réplicas por defecto en nuevos tópicos
-      KAFKA_MIN_INSYNC_REPLICAS: 1              # Mínimo de réplicas sincronizadas antes de aceptar un mensaje    networks:
+      # Configuracion de replicacion (para alta disponibilidad)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2 # Replicas del topico __consumer_offsets
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 2       # Replicas por defecto en nuevos topicos
+      KAFKA_MIN_INSYNC_REPLICAS: 1              # Minimo de relicas sincronizadas antes de aceptar un mensaje    networks:
     networks:
       - kafka_network
     volumes:
@@ -96,22 +98,43 @@ services:
     ports:
       - "8080:8080"  # Puerto para acceder a la interfaz web
     environment:
-      KAFKA_CLUSTERS_0_NAME: local  # Nombre del clúster en la interfaz
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9093  # Dirección de los broker de Kafka
+      KAFKA_CLUSTERS_0_NAME: local  # Nombre del cluster en la interfaz
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9093  # Direccion de los broker de Kafka
     depends_on:
-      - kafka1  # Espera a que Kafka esté disponible antes de iniciar
-      - kafka2  # Espera a que Kafka esté disponible antes de iniciar
+      - kafka1  # Espera a que Kafka este disponible antes de iniciar
+      - kafka2  # Espera a que Kafka este disponible antes de iniciar
     networks:
       - kafka_network
     volumes:
-      - kafka-ui-data:/config  # Persistencia de la configuración de la interfaz
+      - kafka-ui-data:/config  # Persistencia de la configuracion de la interfaz
 
-# Red personalizada para la comunicación entre contenedores
+#contendor de la aplicacion
+  app:
+    build: #  Define como se construye la imagen del contenedor.
+      context: . # Usa el directorio actual como contexto de construccion.
+      dockerfile: dockerfIle # Especifica el archivo Dockerfile a utilizar
+    container_name: producer-kafka
+    depends_on:
+      - kafka1
+      - kafka2
+    env_file: # Carga variables de entorno desde un archivo .env
+      - .env
+    environment: # Define variables de entorno utilizadas por la aplicación Spring Boot.
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} #  Lista de brokers de Kafka a los que se conecta.
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL} # URL de conexión a la base de datos.
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME} # Usuario de la base de datos.
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD} # Contraseña de la base de datos.
+    ports:
+      - 8081:8081
+    networks:
+      - kafka_network
+
+# Red personalizada para la comunicacion entre contenedores
 networks:
   kafka_network:
     driver: bridge  
 
-# Volúmenes para la persistencia de datos
+# Volumenes para la persistencia de datos
 volumes:
   zookeeper:
   kafka1_data:

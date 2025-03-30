@@ -4,9 +4,6 @@ server:
     context-path: /${CONTEXT_PATH}
 
 spring:
-  config:
-    import: optional:file:env.properties
-
   application:
     name: ${APP_NAME}
 

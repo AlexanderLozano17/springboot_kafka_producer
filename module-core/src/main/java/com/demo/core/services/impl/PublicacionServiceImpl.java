@@ -3,6 +3,8 @@ package com.demo.core.services.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,24 +13,43 @@ import com.demo.core.dto.PublicacionDTO;
 import com.demo.core.entities.Publicacion;
 import com.demo.core.repositories.PublicacionRepository;
 import com.demo.core.services.PublicacionService;
+import com.demo.producer.services.KafkaProducerService;
 
 @Service
 public class PublicacionServiceImpl implements PublicacionService {
 	
-	@Autowired
-	private PublicacionRepository publicacionRepository;
+	private static final Logger logger = LoggerFactory.getLogger(PublicacionServiceImpl.class);
+	
+	private final PublicacionRepository publicacionRepository;
+	
+	private final KafkaProducerService producerService;
+	
+	private static final String TOPIC_TEST = "topic-test";
 
+	public PublicacionServiceImpl(PublicacionRepository publicacionRepository, KafkaProducerService producerService) {
+        this.publicacionRepository = publicacionRepository;
+		this.producerService = producerService;
+    }
+	
 	@Override
 	public Optional<Publicacion> guardar(Publicacion publicacion) {
-		// TODO Auto-generated method stub
-		try {
-			return Optional.of(publicacionRepository.save(publicacion));
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return Optional.empty();
-		}
+	    try {
+	        Publicacion savedPublicacion = publicacionRepository.save(publicacion);
+	        Optional<Publicacion> publicacionOpt = Optional.of(savedPublicacion);
+	        
+	        if (publicacionOpt.isPresent()) {
+	            String mensaje = String.format("✅ Publicación registrada con éxito (ID: %d, Título: %s)", savedPublicacion.getId(), savedPublicacion.getTitulo());
+	            producerService.sendMessage(TOPIC_TEST, mensaje);
+	        }
+
+	        return publicacionOpt;
+	        
+	    } catch (Exception e) {
+	        logger.error("❌ Error al guardar la publicación: {}", e.getMessage(), e);
+	        return Optional.empty();
+	    }
 	}
+
 
 	@Override
 	public Optional<PublicacionDTO> obtenerPublicacionId(Long id) {

@@ -23,6 +23,7 @@ public class Persona implements Serializable{
 	private Long id;	
 	private String nombres;
 	private String apellidos;
+	private String nombreCompleto;
 	private int edad;
 	private String email;
 	private String telefono;
@@ -97,5 +98,19 @@ public class Persona implements Serializable{
 	 */
 	public void setComentarios(List<Comentario> comentarios) {
 		this.comentarios = comentarios;
+	}
+
+	/**
+	 * @return the nombreCompleto
+	 */
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+
+	/**
+	 * @param nombreCompleto the nombreCompleto to set
+	 */
+	public void setNombreCompleto() {
+		this.nombreCompleto = nombres + " " + apellidos;
 	}
 }

@@ -1,43 +1,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>com.demo</groupId>
 		<artifactId>springboot_kafka_producer</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath> <!-- Ajusta la ruta si el padre está en otro lugar -->
+		<relativePath>../pom.xml</relativePath> <!-- Ajusta la ruta si el padre esta en otro lugar -->
 	</parent>
-	
+
 	<artifactId>main-app</artifactId>
 	<name>main-app</name>
 	<description>Modulo de arranque del proyecto</description>
-	
-	
+
+
 	<dependencies>
-		<!-- Se heredan automáticamente las dependencias del padre -->
+		<!-- Se heredan automaticamente las dependencias del padre -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-		
-		<!--proporciona un endpoint /actuator/mappings que muestra todos los endpoints registrados en tu aplicación.-->
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!--proporciona un endpoint /actuator/mappings que muestra todos los endpoints registrados en tu aplicacion.-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<dependency>
@@ -45,22 +45,37 @@
 			<artifactId>module-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>module-producer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>	
+		</dependency>
 	</dependencies>
-	
-	
+
 	<build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-    
+		<plugins>
+			<!-- Plugin de Spring Boot para generar un JAR con todas las dependencias -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.demo.main.MainApp</mainClass>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

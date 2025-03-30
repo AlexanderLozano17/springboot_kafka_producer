@@ -19,6 +19,8 @@
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
+		<!--Para evitar problemas con la codificación-->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<!-- Manejo de versiones para dependencias comunes -->
@@ -27,7 +29,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>3.4.4</version>  <!-- Ajusta la versión según la que uses -->
+				<version>3.4.4</version>  <!-- Ajusta la version segun la que uses -->
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -35,7 +37,7 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- Dependencias comunes para los módulos -->
+		<!-- Dependencias comunes para los modulos -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -51,7 +53,7 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -67,29 +69,19 @@
 				<spring.profiles.active>dev</spring.profiles.active>
 			</properties>
 			<dependencies>
-				<dependency>
-					<groupId>com.h2database</groupId>
-					<artifactId>h2</artifactId>
-					<scope>runtime</scope>
-				</dependency>
 			</dependencies>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
 
-		<!-- Perfil de Producción -->
+		<!-- Perfil de Produccion -->
 		<profile>
 			<id>prod</id>
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active>
 			</properties>
 			<dependencies>
-				<dependency>
-					<groupId>org.postgresql</groupId>
-					<artifactId>postgresql</artifactId>
-					<scope>runtime</scope>
-				</dependency>
 			</dependencies>
 		</profile>
 	</profiles>
@@ -107,6 +99,7 @@
 						</compilerArgs>
 					</configuration>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>

@@ -71,6 +71,27 @@ desktop.ini
 !application-*.yml # Permitir todas las variantes de application.yml
 
 # ===========================
+# 🔹 Ignorar archivos de configuración de entorno
+# ===========================
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+.env.properties
+
+# =========================== 
+# Excepción: No ignorar .env-template
+# ===========================
+!.env-template
+!.application-template.yml
+
+# ===========================
 # 🔹 Otros
 # ===========================
 *.gz # Ignorar archivos comprimidos
+.application.yml
+
+
+

@@ -1,4 +1,5 @@
 com/demo/core/entities/Mensaje.class
+com/demo/core/ModuleCoreConfig.class
 com/demo/core/services/impl/PublicacionServiceImpl.class
 com/demo/core/services/PublicacionService.class
 com/demo/core/entities/Comentario.class
