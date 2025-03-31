@@ -10,6 +10,7 @@
 # 🔹 Directorios de construcción
 # ===========================
 /target/
+**/target/
 .build/
 .out/
 
