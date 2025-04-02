@@ -1,26 +1,46 @@
-package com.demo.core.dto;
+package com.demo.dto.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class PersonaDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-	private Long id;
+    
+    @JsonProperty("id")
+    private Long id;
+	
+    @JsonProperty("nombres")
     private String nombres;
+    
+    @JsonProperty("apellidos")
     private String apellidos;
+    
+    @JsonProperty("nombreCompleto")
+    private String nombreCompleto;
+
+    @JsonProperty("edad")
     private int edad;
+    
+    @JsonProperty("email")
     private String email;
+    
+    @JsonProperty("telefono")
     private String telefono;
 
     public PersonaDTO(Long id, String nombres, String apellidos, int edad, String email, String telefono) {
-        this.id = id;
+    	this.id = id; 
         this.nombres = nombres;
         this.apellidos = apellidos;
+        this.nombreCompleto = nombres + " " + apellidos;
         this.edad = edad;
         this.email = email;
         this.telefono = telefono;
     }
-
+        
 	/**
 	 * @return the id
 	 */
@@ -104,4 +124,29 @@ public class PersonaDTO implements Serializable {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
+	
+	/**
+	 * @return the nombreCompleto
+	 */
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+
+	/**
+	 * @param nombreCompleto the nombreCompleto to set
+	 */
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
+	}
+	
+	 @Override
+    public String toString() {
+        return "PersonaDTO{" +
+                ", nombres='" + nombres + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", edad=" + edad +
+                ", email='" + email + '\'' +
+                ", telefono='" + telefono + '\'' +
+                '}';
+    }
 }

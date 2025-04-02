@@ -14,6 +14,7 @@
 		<module>main-app</module>
 		<module>module-core</module>
 		<module>module-producer</module>
+		<module>module-dto</module>
 	</modules>
 
 	<properties>
@@ -59,6 +60,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		
+		<!-- Jackson Databind (para @JsonFormat) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 	</dependencies>
 
 	<profiles>

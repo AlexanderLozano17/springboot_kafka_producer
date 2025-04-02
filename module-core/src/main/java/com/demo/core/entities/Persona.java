@@ -3,7 +3,9 @@ package com.demo.core.entities;
 import java.io.Serializable;
 import java.util.List;
 
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name ="persona")
@@ -25,7 +29,13 @@ public class Persona implements Serializable{
 	private String apellidos;
 	private String nombreCompleto;
 	private int edad;
+	
+	@Email(message = "El email debe ser válido")
+    @NotNull(message = "El email no puede ser nulo")
+    @Column(unique = true)  // Asegura que el email sea único en la base de datos
 	private String email;
+	
+	@Column(length = 10)
 	private String telefono;
 	
 	@OneToMany(mappedBy = "persona", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

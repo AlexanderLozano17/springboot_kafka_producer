@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+    <!-- Referencia al proyecto padre -->
+   <parent>
+	    <groupId>com.demo</groupId>
+	    <artifactId>springboot_kafka_producer</artifactId>
+	    <version>0.0.1-SNAPSHOT</version>
+	    <relativePath>../pom.xml</relativePath>  <!-- IMPORTANTE -->
+	</parent>
+	
+	<artifactId>module-dto</artifactId>
+	<name>module-dto</name>
+	<description>Módulo dto del sistema: DTO</description>
+	
+	 <dependencies>
+        <!-- Se heredan automáticamente las dependencias del padre -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>

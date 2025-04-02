@@ -79,7 +79,6 @@ desktop.ini
 .env.production
 .env.staging
 .env.test
-.env.properties
 
 # =========================== 
 # Excepción: No ignorar .env-template
@@ -92,6 +91,7 @@ desktop.ini
 # ===========================
 *.gz # Ignorar archivos comprimidos
 application.yml
+application.properties
 
 
 

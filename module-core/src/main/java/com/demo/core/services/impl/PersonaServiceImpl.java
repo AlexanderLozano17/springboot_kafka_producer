@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.demo.core.dto.PersonaDTO;
 import com.demo.core.entities.Persona;
 import com.demo.core.repositories.PersonaRepository;
 import com.demo.core.services.PersonaService;
-import com.demo.producer.services.KafkaProducerService;
+import com.demo.dto.dto.PersonaDTO;
+import com.demo.dto.dto.ResponseKafka;
+import com.demo.producer.services.KafkaProducerPersonaService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PersonaServiceImpl implements PersonaService {
@@ -21,28 +23,25 @@ public class PersonaServiceImpl implements PersonaService {
 
 	private final PersonaRepository personaRepository;
 	
-	private final KafkaProducerService producerService;
-	
-	private static final String TOPIC_TEST = "topic-test";
-	
-	public PersonaServiceImpl(PersonaRepository personaRepository, KafkaProducerService producerService) {
+	private final KafkaProducerPersonaService producerService;
+		
+	public PersonaServiceImpl(PersonaRepository personaRepository, KafkaProducerPersonaService producerService) {
 		this.personaRepository = personaRepository;
 		this.producerService = producerService;
 	}
-
+	
 	@Override
-	public Optional<Persona> guardar(Persona persona) {
+	public Optional<PersonaDTO> guardar(Persona persona) {
 		// TODO Auto-generated method stub
 		try {
-//			 Persona savePersona = personaRepository.save(persona);
-//			 Optional<Persona> personaOpt = Optional.of(savePersona);
-//			 
-//			 if (personaOpt.isPresent()) {
-				String mensaje = String.format("✅ Persona registrada con éxito (ID: %d, Título: %s)", 1, "alexander lozano");//savePersona.getId(), savePersona.getNombreCompleto());
-				producerService.sendMessage(TOPIC_TEST, mensaje); 		 
-//			 }	
+			Persona savePersona = personaRepository.save(persona);	
+			PersonaDTO personaDTO = personaDTO(savePersona);
+			
+			String mensaje = String.format("✅ Persona registrada con éxito (ID: %d, Título: %s)", savePersona.getId(), savePersona.getNombreCompleto());
+
+			producerService.sendMessagePersona(new ResponseKafka(mensaje, personaDTO)); 		 
 			 
-			 return Optional.of(new Persona()); 	
+			return Optional.of(personaDTO); 	
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -60,7 +59,7 @@ public class PersonaServiceImpl implements PersonaService {
 	
 	@Transactional(readOnly = true)
 	public List<Persona> obtenerPersonaPublicaciones() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub	
 		return personaRepository.findAll();
 	}
 
@@ -90,6 +89,20 @@ public class PersonaServiceImpl implements PersonaService {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param persona
+	 * @return
+	 */
+	private PersonaDTO personaDTO(Persona persona) {
+		return new PersonaDTO(persona.getId(),
+				persona.getNombres(), 
+				persona.getApellidos(),
+				persona.getEdad(), 
+				persona.getEmail(), 
+				persona.getTelefono()); 
 	}
 	
 }

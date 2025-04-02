@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.core.dto.PublicacionDTO;
 import com.demo.core.entities.Publicacion;
 import com.demo.core.services.PublicacionService;
+import com.demo.dto.dto.PublicacionDTO;
 
 @RestController
 @RequestMapping("/api/publicaciones")

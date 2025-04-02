@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.core.dto.PersonaDTO;
 import com.demo.core.entities.Persona;
 import com.demo.core.services.PersonaService;
+import com.demo.dto.dto.PersonaDTO;
+import com.demo.dto.dto.ResponseApi;
 
 @RestController
 @RequestMapping("/api/persona")
@@ -26,21 +27,22 @@ public class PersonaController {
 	private PersonaService personaService;
 	
 	@PostMapping("/save")
-	public ResponseEntity<Persona> guardar(@RequestBody Persona persona) {
+	public ResponseEntity<ResponseApi<PersonaDTO>> guardar(@RequestBody Persona persona) {
 		
-		Optional<Persona> optionalPersona =  personaService.guardar(persona);
+		Optional<PersonaDTO> optionalPersona =  personaService.guardar(persona);
 		if (optionalPersona.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(optionalPersona.get());
+			String mensaje = "Registro almacenado con éxito!";
+			return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), mensaje, optionalPersona.get()));
 		} 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();		
 	}
 	
 	@GetMapping("/{id}/detalle-basico")
-	public ResponseEntity<PersonaDTO> obtenerPersona(@PathVariable Long id) {
+	public ResponseEntity<ResponseApi<PersonaDTO>> obtenerPersona(@PathVariable Long id) {
 		try {
 			Optional<PersonaDTO> persona = personaService.obtenerId(id);
 			if (persona.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(persona.get());
+				return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), "", persona.get()));
 			} 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
@@ -100,6 +102,17 @@ public class PersonaController {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param statusCode
+	 * @param message
+	 * @param persona
+	 * @return
+	 */
+	private ResponseApi<PersonaDTO> responseApi(int statusCode, String message, PersonaDTO persona) {
+		return new ResponseApi(statusCode, message, persona);
 	}
 		
 }

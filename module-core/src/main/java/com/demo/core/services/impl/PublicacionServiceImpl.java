@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.demo.core.dto.PublicacionDTO;
 import com.demo.core.entities.Publicacion;
 import com.demo.core.repositories.PublicacionRepository;
 import com.demo.core.services.PublicacionService;
-import com.demo.producer.services.KafkaProducerService;
+import com.demo.dto.dto.PublicacionDTO;
+import com.demo.producer.services.KafkaProducerPersonaService;
 
 @Service
 public class PublicacionServiceImpl implements PublicacionService {
@@ -22,11 +22,9 @@ public class PublicacionServiceImpl implements PublicacionService {
 	
 	private final PublicacionRepository publicacionRepository;
 	
-	private final KafkaProducerService producerService;
-	
-	private static final String TOPIC_TEST = "topic-test";
+	private final KafkaProducerPersonaService producerService;
 
-	public PublicacionServiceImpl(PublicacionRepository publicacionRepository, KafkaProducerService producerService) {
+	public PublicacionServiceImpl(PublicacionRepository publicacionRepository, KafkaProducerPersonaService producerService) {
         this.publicacionRepository = publicacionRepository;
 		this.producerService = producerService;
     }
@@ -39,7 +37,7 @@ public class PublicacionServiceImpl implements PublicacionService {
 	        
 	        if (publicacionOpt.isPresent()) {
 	            String mensaje = String.format("✅ Publicación registrada con éxito (ID: %d, Título: %s)", savedPublicacion.getId(), savedPublicacion.getTitulo());
-	            producerService.sendMessage(TOPIC_TEST, mensaje);
+	            //producerService.sendMessage(mensaje);
 	        }
 
 	        return publicacionOpt;

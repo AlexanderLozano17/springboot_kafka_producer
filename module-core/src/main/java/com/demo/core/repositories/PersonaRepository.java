@@ -8,15 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.demo.core.dto.PersonaDTO;
 import com.demo.core.entities.Persona;
+import com.demo.dto.dto.PersonaDTO;
 
 public interface PersonaRepository extends JpaRepository<Persona, Long> {
 	
-	@Query("SELECT new com.demo.core.dto.PersonaDTO(p.id, p.nombres, p.apellidos, p.edad, p.email, p.telefono) FROM Persona p WHERE p.id = :id")
+	@Query("SELECT new com.demo.dto.dto.PersonaDTO(p.id, p.nombres, p.apellidos, p.edad, p.email, p.telefono) FROM Persona p WHERE p.id = :id")
 	Optional<PersonaDTO> findPersonaBasicById(@Param("id") Long id);
 
-	@Query("SELECT new com.demo.core.dto.PersonaDTO(p.id, p.nombres, p.apellidos, p.edad, p.email, p.telefono) FROM Persona p")
+	@Query("SELECT new com.demo.dto.dto.PersonaDTO(p.id, p.nombres, p.apellidos, p.edad, p.email, p.telefono) FROM Persona p")
 	List<PersonaDTO> obtenerPersonas();
 
 }
