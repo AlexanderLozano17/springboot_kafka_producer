@@ -14,35 +14,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.core.entities.Persona;
-import com.demo.core.services.PersonaService;
-import com.demo.dto.dto.PersonaDTO;
+import com.demo.core.entities.Person;
+import com.demo.core.services.PersonService;
+import com.demo.dto.dto.PersonDTO;
 import com.demo.dto.dto.ResponseApi;
 
 @RestController
 @RequestMapping("/api/persona")
-public class PersonaController {
+public class PersonController {
 
 	@Autowired
-	private PersonaService personaService;
+	private PersonService personService;
 	
 	@PostMapping("/save")
-	public ResponseEntity<ResponseApi<PersonaDTO>> guardar(@RequestBody Persona persona) {
+	public ResponseEntity<ResponseApi<PersonDTO>> save(@RequestBody Person person) {
 		
-		Optional<PersonaDTO> optionalPersona =  personaService.guardar(persona);
-		if (optionalPersona.isPresent()) {
-			String mensaje = "Registro almacenado con éxito!";
-			return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), mensaje, optionalPersona.get()));
+		Optional<PersonDTO> optionalPerson =  personService.save(person);
+		if (optionalPerson.isPresent()) {
+			String message = "Registro almacenado con éxito!";
+			return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), message, optionalPerson.get()));
 		} 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();		
 	}
 	
 	@GetMapping("/{id}/detalle-basico")
-	public ResponseEntity<ResponseApi<PersonaDTO>> obtenerPersona(@PathVariable Long id) {
+	public ResponseEntity<ResponseApi<PersonDTO>> gerPersonBasicById(@PathVariable Long id) {
 		try {
-			Optional<PersonaDTO> persona = personaService.obtenerId(id);
-			if (persona.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), "", persona.get()));
+			Optional<PersonDTO> person = personService.gerPersonBasicById(id);
+			if (person.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(responseApi(HttpStatus.OK.value(), "", person.get()));
 			} 
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		} catch (Exception e) {
@@ -53,10 +53,10 @@ public class PersonaController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<PersonaDTO>> obtenerPersonas() {		
+	public ResponseEntity<List<PersonDTO>> getAllPerons() {		
 		try {
-			List<PersonaDTO> listaPersonas = personaService.obtener();
-			return ResponseEntity.status(HttpStatus.OK).body(listaPersonas);
+			List<PersonDTO> listPerson = personService.getAllPerons();
+			return ResponseEntity.status(HttpStatus.OK).body(listPerson);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -64,10 +64,10 @@ public class PersonaController {
 	}	
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarId(@PathVariable long id) {
+	public ResponseEntity<String> deleteById(@PathVariable long id) {
 		
-		boolean esELiminado = personaService.eliminarId(id);
-		if (esELiminado) {
+		boolean isDelete = personService.deleteById(id);
+		if (isDelete) {
 			return ResponseEntity.status(HttpStatus.OK).body("El registro con ID " + id + " se ha eliminado");
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -75,11 +75,11 @@ public class PersonaController {
 	}
 	
 	@GetMapping("/{personaId}/publicaciones")
-	public ResponseEntity<Persona> obtenerPersonaIdPublicaciones(@PathVariable Long personaId) {
+	public ResponseEntity<Person> getPersonIdPublications(@PathVariable Long personaId) {
 		try {			
-			Optional<Persona> personaPublicaciones = personaService.obtenerPersonaIdPublicaciones(personaId);
-			if (personaPublicaciones.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(personaPublicaciones.get());	
+			Optional<Person> personPublication = personService.getPersonsPublications(personaId);
+			if (personPublication.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(personPublication.get());	
 			}
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
@@ -90,11 +90,11 @@ public class PersonaController {
 	}
 	
 	@GetMapping("/publicaciones")
-	public ResponseEntity<List<Persona>> obtenerPersonaPublicaciones() {
+	public ResponseEntity<List<Person>> getPersonsPublications() {
 		try {			
-			List<Persona> personaPublicaciones = personaService.obtenerPersonaPublicaciones();
-			if (!personaPublicaciones.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.OK).body(personaPublicaciones);	
+			List<Person> personPublications = personService.getPersonsPublications();
+			if (!personPublications.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.OK).body(personPublications);	
 			}
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
@@ -111,8 +111,8 @@ public class PersonaController {
 	 * @param persona
 	 * @return
 	 */
-	private ResponseApi<PersonaDTO> responseApi(int statusCode, String message, PersonaDTO persona) {
-		return new ResponseApi(statusCode, message, persona);
+	private ResponseApi<PersonDTO> responseApi(int statusCode, String message, PersonDTO person) {
+		return new ResponseApi(statusCode, message, person);
 	}
 		
 }

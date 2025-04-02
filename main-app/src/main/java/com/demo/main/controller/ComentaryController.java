@@ -11,22 +11,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.core.entities.Comentario;
-import com.demo.core.services.ComentarioService;
+import com.demo.core.entities.Comentary;
+import com.demo.core.services.ComentaryService;
 
 @RestController
 @RequestMapping("/api/comentario")
-public class ComentarioController {
+public class ComentaryController {
 	
-	private ComentarioService comentarioService;
+	private ComentaryService comentaryService;
 	
 	@GetMapping
-	public ResponseEntity<List<Comentario>> obtener() {
+	public ResponseEntity<List<Comentary>> getComentaries() {
 		try {
-			List<Comentario> comentarios = comentarioService.obtener();
+			List<Comentary> comentarios = comentaryService.getComentaries();
 			if (!comentarios.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.OK).body(comentarios);
 			} 
@@ -38,9 +37,9 @@ public class ComentarioController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Comentario> obtenerId(Long id) {
+	public ResponseEntity<Comentary> getComentaryById(Long id) {
 		try {
-			Optional<Comentario> comentario = comentarioService.obtenerId(id);
+			Optional<Comentary> comentario = comentaryService.getComentaryById(id);
 			if (comentario.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(comentario.get());
 			}
@@ -52,8 +51,8 @@ public class ComentarioController {
 	}
 	
 	@PostMapping("/save")
-	public ResponseEntity<Comentario> guardar(@RequestBody Comentario comentario) {
-		Optional<Comentario> comentario_ = comentarioService.guardar(comentario);
+	public ResponseEntity<Comentary> save(@RequestBody Comentary comentario) {
+		Optional<Comentary> comentario_ = comentaryService.save(comentario);
 		if (comentario_.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(comentario_.get());
 		}
@@ -61,8 +60,8 @@ public class ComentarioController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminar( @PathVariable Long id) {
-		boolean esEliminado = comentarioService.eliminar(id);
+	public ResponseEntity<String> deleteById( @PathVariable Long id) {
+		boolean esEliminado = comentaryService.deleteById(id);
 		if (esEliminado) {
 			return ResponseEntity.status(HttpStatus.OK).body("El registro con ID " + id + " se ha eliminado");
 		}

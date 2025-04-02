@@ -13,31 +13,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.core.entities.Publicacion;
-import com.demo.core.services.PublicacionService;
-import com.demo.dto.dto.PublicacionDTO;
+import com.demo.core.entities.Publication;
+import com.demo.core.services.PublicationService;
+import com.demo.dto.dto.PublicationDTO;
 
 @RestController
 @RequestMapping("/api/publicaciones")
-public class PublicacionController {
+public class PublicationController {
 	
 	@Autowired
-	private PublicacionService publicacionService;
+	private PublicationService publicationService;
 	
 	@PostMapping("/save")
-	public ResponseEntity<Publicacion> guardar(@RequestBody Publicacion publicacion) {
+	public ResponseEntity<Publication> save(@RequestBody Publication publication) {
 		
-		Optional<Publicacion> publicacion_ =  publicacionService.guardar(publicacion);
-		if (publicacion_.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(publicacion_.get());
+		Optional<Publication> publication_ =  publicationService.save(publication);
+		if (publication_.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).body(publication_.get());
 		}
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PublicacionDTO> obtenerPublicacionId(@PathVariable Long id) {
+	public ResponseEntity<PublicationDTO> getPublicationId(@PathVariable Long id) {
 		try {
-			Optional<PublicacionDTO> publicacion = publicacionService.obtenerPublicacionId(id);
+			Optional<PublicationDTO> publicacion = publicationService.getPublicationId(id);
 			if (publicacion.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(publicacion.get());
 			}
@@ -50,9 +50,9 @@ public class PublicacionController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<PublicacionDTO>> obtenerPublicaciones() {
+	public ResponseEntity<List<PublicationDTO>> getPublications() {
 		try {
-			List<PublicacionDTO> publicacion = publicacionService.obtenerPublicaciones();
+			List<PublicationDTO> publicacion = publicationService.getPublications();
 			if (!publicacion.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.OK).body(publicacion);
 			}
@@ -65,9 +65,9 @@ public class PublicacionController {
 	}	
 	
 	@GetMapping("/persona/{publicacionId}")
-	public ResponseEntity<Publicacion> obtenerPublicacionPersona(@PathVariable Long publicacionId) {
+	public ResponseEntity<Publication> getPublicationPerson(@PathVariable Long publicationId) {
 		try {
-			Optional<Publicacion> publicacion = publicacionService.obtenerPublicacionPersona(publicacionId);
+			Optional<Publication> publicacion = publicationService.getPublicationPerson(publicationId);
 			if (publicacion.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(publicacion.get());
 			}
