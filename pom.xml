@@ -15,6 +15,7 @@
 		<module>module-core</module>
 		<module>module-producer</module>
 		<module>module-dto</module>
+		<module>module-common</module>
 	</modules>
 
 	<properties>

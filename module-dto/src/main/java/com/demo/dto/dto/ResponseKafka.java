@@ -13,12 +13,12 @@ public class ResponseKafka <T> implements Serializable {
 	@JsonProperty("message")
 	private String message;
 	
-	@JsonProperty("entidad")
-	private T entidad;
+	@JsonProperty("data")
+	private T data;
 
-	public ResponseKafka(String message, T entity) {
+	public ResponseKafka(String message, T data) {
 		this.message = message;
-		this.entidad = entity;
+		this.data = data;
 	}
 
 	/**
@@ -38,14 +38,14 @@ public class ResponseKafka <T> implements Serializable {
 	/**
 	 * @return the entidad
 	 */
-	public T getEntidad() {
-		return entidad;
+	public T getData() {
+		return data;
 	}
 
 	/**
 	 * @param entidad the entidad to set
 	 */
-	public void setEntidad(T entidad) {
-		this.entidad = entidad;
+	public void setData(T data) {
+		this.data = data;
 	}
 }

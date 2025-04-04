@@ -2,6 +2,7 @@ package com.demo.core.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,10 @@ import com.demo.core.services.PersonService;
 import com.demo.dto.dto.PersonDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPersonService;
+import com.demo.utils.LogHelper;
+import com.demo.utils.LogMessageKafka;
+import com.demo.utils.LogPerson;
+import com.demo.utils.LogPublication;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -31,20 +36,18 @@ public class PersonServiceImpl implements PersonService {
 	
 	@Override
 	public Optional<PersonDTO> save(Person person) {
-		// TODO Auto-generated method stub
+		logger.info(LogHelper.start(getClass(), "save"));
 		try {
 			Person savePerson = personRepository.save(person);	
-			PersonDTO personDTO = personDTO(savePerson);
+			logger.info(LogHelper.success(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savePerson.getId())));
 			
-			String mensaje = String.format("✅ Persona registrada con éxito (ID: %d, Título: %s)", savePerson.getId(), savePerson.getNames() + " " + savePerson.getLastNames());
-
-			producerService.sendMessagePerson(new ResponseKafka(mensaje, personDTO)); 		 
+			PersonDTO personDTO = personDTO(savePerson);
+			producerService.sendMessageRecordPerson(new ResponseKafka(String.format(LogPerson.PERSON_SAVE_SUCCESS, savePerson.getId()), personDTO)); 		 
 			 
 			return Optional.of(personDTO); 	
 			
 		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("❌ Error al guardar la persona: {}", e.getMessage(), e);
+			logger.error(LogHelper.error(getClass(), "save", String.format(LogPerson.PERSON_SAVE_ERROR, e.getMessage())), e);
 			return Optional.empty();
 		}
 	}
@@ -52,39 +55,40 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Person> getPersonsPublications(Long id) {
-		// TODO Auto-generated method stub
+		logger.info(LogHelper.start(getClass(), "getPersonsPublications"));
 		return personRepository.findById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public List<Person> getPersonsPublications() {
-		// TODO Auto-generated method stub	
+		logger.info(LogHelper.start(getClass(), "getPersonsPublications"));
 		return personRepository.findAll();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<PersonDTO> getAllPerons() {
-		// TODO Auto-generated method stub
+	public List<PersonDTO> getAllPersons() {
+		logger.info(LogHelper.start(getClass(), "getAllPersons"));
 		return personRepository.getAllPerons();
 	}
 
 	@Override
-	public Optional<PersonDTO> gerPersonBasicById(Long id) {
-		// TODO Auto-generated method stub
+	public Optional<PersonDTO> getPersonBasicById(Long id) { 
+		logger.info(LogHelper.start(getClass(), "getPersonBasicById"));
 		return personRepository.findPersonaBasicById(id);
 	}
 	
 	@Override
 	public boolean deleteById(Long id) {
+		logger.info(LogHelper.start(getClass(), "deleteById"));
 		
 		if (!personRepository.existsById(id))  return false;		
 		try {
 			personRepository.deleteById(id);
+			logger.info(LogHelper.success(getClass(), "deleteById", String.format(LogPerson.PERSON_DELETE_SUCCESS, id)));
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("Error al eliminar el registro con ID {}", id, e.getMessage(), e);
+			logger.info(LogHelper.success(getClass(), "deleteById", String.format(LogPerson.PERSON_DELETE_ERROR, e.getMessage())), e);
 			return false;
 		}		
 	}
@@ -95,12 +99,23 @@ public class PersonServiceImpl implements PersonService {
 	 * @return
 	 */
 	private PersonDTO personDTO(Person person) {
+		logger.info(LogHelper.start(getClass(), "personDTO"));
 		return new PersonDTO(person.getId(),
 				person.getNames(), 
 				person.getLastNames(),
 				person.getAge(), 
 				person.getEmail(), 
 				person.getTelephone()); 
+	}
+	
+	/**
+	 * 
+	 * @param listPerson
+	 * @return
+	 */
+	private List<PersonDTO> getPersonDTO(List<Person> listPerson) {
+		logger.info(LogHelper.start(getClass(), "getPersonDTO"));
+		return listPerson.stream().map(person -> personDTO(person)).collect(Collectors.toList());
 	}
 	
 }

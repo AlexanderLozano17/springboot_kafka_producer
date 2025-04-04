@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.demo.producer.services.KafkaProducerPersonService;
 import com.demo.producer.utils.ConstantsKafka;
+import com.demo.utils.LogHelper;
+import com.demo.utils.LogMessageKafka;
 
 @Service
 public class KafkaProducerPersonServiceImpl implements KafkaProducerPersonService {
@@ -24,18 +26,19 @@ public class KafkaProducerPersonServiceImpl implements KafkaProducerPersonServic
     }
 
 	@Override
-	public void sendMessagePerson(Object message) {
-		// TODO Auto-generated method stub
-		CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(ConstantsKafka.TOPIC_PERSONAS, message);
+	public void sendMessageRecordPerson(Object message) {
+		logger.info(LogHelper.start(getClass(), LogMessageKafka.PRODUCER_MESSAGE_SENT));
+		
+		CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(ConstantsKafka.TOPIC_PERSONS, message);
 		
 		future.whenComplete((result, ex) -> { 
             // 4️⃣ Verificar si el envío fue exitoso o falló
             if (ex == null) { 
                 // Si no hubo errores, loggeamos el mensaje como enviado correctamente
-                logger.info("✅📤 Mensaje enviado a Kafka [{}]: {}", ConstantsKafka.TOPIC_PERSONAS, message);
+            	logger.info(LogHelper.success(getClass(), "sendMessageRecordPerson", String.format(LogMessageKafka.PRODUCER_MESSAGE_SUCCESS, ConstantsKafka.TOPIC_PERSONS)));
             } else { 
                 // Si hubo un error, lo registramos con detalles
-                logger.error("❌ Error al enviar mensaje a Kafka [{}]: {}", ConstantsKafka.TOPIC_PERSONAS, message, ex);
+            	logger.error(LogHelper.error(getClass(), "sendMessageRecordPerson", String.format(LogMessageKafka.PRODUCER_ERROR, ex)));
             }
         });
 		

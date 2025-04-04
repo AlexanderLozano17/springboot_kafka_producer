@@ -14,9 +14,9 @@ public interface PersonService {
 	
 	List<Person> getPersonsPublications();
 	
-	Optional<PersonDTO> gerPersonBasicById(Long id);
+	Optional<PersonDTO> getPersonBasicById(Long id);
 	
-	List<PersonDTO> getAllPerons();
+	List<PersonDTO> getAllPersons();
 
 	boolean deleteById(Long id);
 	

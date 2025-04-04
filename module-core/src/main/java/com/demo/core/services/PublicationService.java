@@ -8,7 +8,7 @@ import com.demo.dto.dto.PublicationDTO;
 
 public interface PublicationService {
 	
-	Optional<Publication> save(Publication publicacion);
+	Optional<PublicationDTO> save(Publication publicacion);
 	
 	Optional<PublicationDTO> getPublicationId(Long id);
 	

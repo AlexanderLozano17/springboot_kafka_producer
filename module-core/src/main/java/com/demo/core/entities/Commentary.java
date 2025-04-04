@@ -14,8 +14,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "comentary")
-public class Comentary implements Serializable {
+@Table(name = "commentary")
+public class Commentary implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -34,14 +34,14 @@ public class Comentary implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dateComentary;
 	
-	private String comentary;
+	private String content;
 	
-	public Comentary() {}
+	public Commentary() {}
 	
-    public Comentary(Publication publication, Person person, String comentary) {
+    public Commentary(Publication publication, Person person, String content) {
         this.publication = publication;
         this.person = person;
-        this.comentary = comentary;
+        this.content = content;
         this.dateComentary = LocalDate.now(); // Fecha por defecto al crear
     }
 
@@ -104,14 +104,14 @@ public class Comentary implements Serializable {
 	/**
 	 * @return the comentary
 	 */
-	public String getComentary() {
-		return comentary;
+	public String getContent() {
+		return content;
 	}
 
 	/**
 	 * @param comentary the comentary to set
 	 */
-	public void setComentary(String comentary) {
-		this.comentary = comentary;
+	public void setContent(String content) {
+		this.content = content;
 	}	
 }

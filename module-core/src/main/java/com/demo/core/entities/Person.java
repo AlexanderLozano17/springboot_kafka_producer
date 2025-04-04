@@ -3,7 +3,6 @@ package com.demo.core.entities;
 import java.io.Serializable;
 import java.util.List;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +25,7 @@ public class Person implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;	
 	private String names;
+	
 	private String lastNames;
 	private int age;
 	
@@ -41,7 +41,7 @@ public class Person implements Serializable{
 	private List<Publication> publications;
 	
 	@OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comentary> comentaries;
+	private List<Commentary> commentaries;
 	
 	public Person() {}
 
@@ -146,14 +146,14 @@ public class Person implements Serializable{
 	/**
 	 * @return the comentaries
 	 */
-	public List<Comentary> getComentaries() {
-		return comentaries;
+	public List<Commentary> getComentaries() {
+		return commentaries;
 	}
 
 	/**
 	 * @param comentaries the comentaries to set
 	 */
-	public void setComentaries(List<Comentary> comentaries) {
-		this.comentaries = comentaries;
+	public void setComentaries(List<Commentary> commentaries) {
+		this.commentaries = commentaries;
 	}
 }

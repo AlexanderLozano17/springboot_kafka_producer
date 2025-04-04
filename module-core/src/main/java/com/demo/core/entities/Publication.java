@@ -44,7 +44,7 @@ public class Publication implements Serializable {
 	private LocalDate datePublication;
 	
 	@OneToMany(mappedBy = "publication", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Comentary> comentary;
+	private List<Commentary> commentaries;
 	
 	public Publication() {}
 	
@@ -132,14 +132,14 @@ public class Publication implements Serializable {
 	/**
 	 * @return the comentary
 	 */
-	public List<Comentary> getComentary() {
-		return comentary;
+	public List<Commentary> getComentaries() {
+		return commentaries;
 	}
 
 	/**
 	 * @param comentary the comentary to set
 	 */
-	public void setComentary(List<Comentary> comentary) {
-		this.comentary = comentary;
+	public void setComentaries(List<Commentary> commentaries) {
+		this.commentaries = commentaries;
 	}
 }

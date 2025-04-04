@@ -2,6 +2,7 @@ package com.demo.core.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,10 @@ import com.demo.core.entities.Publication;
 import com.demo.core.repositories.PublicationRepository;
 import com.demo.core.services.PublicationService;
 import com.demo.dto.dto.PublicationDTO;
-import com.demo.producer.services.KafkaProducerPersonService;
+import com.demo.dto.dto.ResponseKafka;
+import com.demo.producer.services.KafkaProducerPublicationService;
+import com.demo.utils.LogHelper;
+import com.demo.utils.LogPublication;
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
@@ -21,28 +25,31 @@ public class PublicationServiceImpl implements PublicationService {
 	
 	private final PublicationRepository publicationRepository;
 	
-	private final KafkaProducerPersonService producerService;
+	private final KafkaProducerPublicationService producerService;
 
-	public PublicationServiceImpl(PublicationRepository publicationRepository, KafkaProducerPersonService producerService) {
+	public PublicationServiceImpl(PublicationRepository publicationRepository, KafkaProducerPublicationService producerService) {
         this.publicationRepository = publicationRepository;
 		this.producerService = producerService;
     }
 	
 	@Override
-	public Optional<Publication> save(Publication publicacion) {
+	public Optional<PublicationDTO> save(Publication publicacion) {
+		logger.info(LogHelper.start(getClass(), "save"));
+		
 	    try {
-	        Publication savedPublication = publicationRepository.save(publicacion);
-	        Optional<Publication> publicationOpt = Optional.of(savedPublication);
+	        Publication savedPublication = publicationRepository.save(publicacion);	 
+	        logger.info(LogHelper.success(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savedPublication.getId())));
 	        
-	        if (publicationOpt.isPresent()) {
-	            String mensaje = String.format("✅ Publicación registrada con éxito (ID: %d, Título: %s)", savedPublication.getId(), savedPublication.getTitle());
-	            //producerService.sendMessage(mensaje);
-	        }
-
-	        return publicationOpt;
+	        PublicationDTO publicationOpt = publicationDTO(savedPublication);
+	        
+	        String mensaje = String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savedPublication.getId());
+	        
+	        producerService.sendMessageRecordPublication(new ResponseKafka(mensaje, publicationOpt));
+	   
+	        return Optional.of(publicationOpt);
 	        
 	    } catch (Exception e) {
-	        logger.error("❌ Error al guardar la publicación: {}", e.getMessage(), e);
+	    	logger.info(LogHelper.error(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_ERROR, e.getMessage())), e);
 	        return Optional.empty();
 	    }
 	}
@@ -50,27 +57,49 @@ public class PublicationServiceImpl implements PublicationService {
 
 	@Override
 	public Optional<PublicationDTO> getPublicationId(Long id) {
-		// TODO Auto-generated method stub
-		return publicationRepository.getPublicationId(id);
+		logger.info(LogHelper.start(getClass(), "getPublicationId"));
+		return Optional.of(publicationDTO(publicationRepository.getPublicationId(id).get()));
 	}
 
 	@Override
 	public List<PublicationDTO> getPublications() {
-		// TODO Auto-generated method stub
-		return publicationRepository.getPublications();
+		logger.info(LogHelper.start(getClass(), "getPublications"));
+		return getPublicationDTO(publicationRepository.getPublications());
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Publication> getPublicationPerson(Long id) {
-		// TODO Auto-generated method stub		
+		logger.info(LogHelper.start(getClass(), "getPublicationPerson"));
+		
 		try {
 			return publicationRepository.findById(id);
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.info(LogHelper.error(getClass(), "findById", String.format(String.format(LogPublication.PUBLICATION_LIST_ERROR, id), e.getMessage())), e);
 			logger.error("Error al obtener las publicacione registro con ID {}", id, e.getMessage(), e);
 			return Optional.empty();
 		}
 	}
 	
+	/** 
+	 * @param Comentary
+	 * @return
+	 */
+	private PublicationDTO publicationDTO(Publication publication) {
+		logger.info(LogHelper.start(getClass(), "publicationDTO"));
+		
+		return new PublicationDTO(publication.getId(), 
+				publication.getTitle(), 
+				publication.getContent(),
+				publication.getDatePublication()); 
+	}
+	
+	/** 
+	 * @param listPublication
+	 * @return
+	 */
+	private List<PublicationDTO> getPublicationDTO(List<Publication> listPublication) {
+		logger.info(LogHelper.start(getClass(), "getPublicationDTO"));
+		return listPublication.stream().map(publication -> publicationDTO(publication)).collect(Collectors.toList()); 
+	}
 }

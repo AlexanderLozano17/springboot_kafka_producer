@@ -6,23 +6,23 @@ public class ResponseApi<T> implements Serializable {
 	
 	 private static final long serialVersionUID = 1L;
 
-	    private int statusCode;   // Código de estado HTTP (Ejemplo: 200, 404, etc.)
+	    private String status;   // Código de estado HTTP (Ejemplo: 200, 404, etc.)
 	    private String message;   // Mensaje de respuesta (Ejemplo: "Operación exitosa")
 	    private T data;           // Datos de la respuesta (puede ser cualquier tipo genérico)
 
-	    public ResponseApi(int statusCode, String message, T data) {
-	        this.statusCode = statusCode;
+	    public ResponseApi(String status, String message, T data) {
+	        this.status = status;
 	        this.message = message;
 	        this.data = data;
 	    }
 
 	    // Getters y setters
-	    public int getStatusCode() {
-	        return statusCode;
+	    public String getStatus() {
+	        return status;
 	    }
 
-	    public void setStatusCode(int statusCode) {
-	        this.statusCode = statusCode;
+	    public void setStatus(String status) {
+	        this.status = status;
 	    }
 
 	    public String getMessage() {
@@ -40,11 +40,11 @@ public class ResponseApi<T> implements Serializable {
 	    public void setData(T data) {
 	        this.data = data;
 	    }
-
+	    
 	    @Override
 	    public String toString() {
 	        return "ApiResponse{" +
-	                "statusCode=" + statusCode +
+	                "statusCode=" + status +
 	                ", message='" + message + '\'' +
 	                ", data=" + data +
 	                '}';

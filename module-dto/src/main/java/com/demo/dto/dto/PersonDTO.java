@@ -1,13 +1,11 @@
 package com.demo.dto.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class PersonDTO implements Serializable {
@@ -34,7 +32,10 @@ public class PersonDTO implements Serializable {
     
     @JsonProperty("telephone")
 	private String telephone;
-   
+    
+    @JsonProperty("publications")
+    private List<PublicationDTO> publications = new ArrayList<>();
+       
 	 public PersonDTO(Long id, String names, String lastNames, int age, String email, String telephone) {
 		this.id = id;
 		this.names = names;
@@ -44,7 +45,7 @@ public class PersonDTO implements Serializable {
 		this.email = email;
 		this.telephone = telephone;
 	}
-
+	 	 
 	/**
 	 * @return the id
 	 */
@@ -142,6 +143,20 @@ public class PersonDTO implements Serializable {
 	 */
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
+	}
+
+	/**
+	 * @return the publications
+	 */
+	public List<PublicationDTO> getPublications() {
+		return publications;
+	}
+
+	/**
+	 * @param publications the publications to set
+	 */
+	public void setPublications(List<PublicationDTO> publications) {
+		this.publications = publications;
 	}
 
 	@Override
