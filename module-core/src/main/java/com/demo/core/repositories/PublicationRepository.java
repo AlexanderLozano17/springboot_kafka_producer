@@ -16,9 +16,9 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
 	@EntityGraph(attributePaths = {"persona"})
 	Optional<Publication> findById(Long id);
 		
-	@Query("SELECT p.id, p.title, p.content, p.datePublication FROM Publication p WHERE p.id = :id")
-	Optional<Publication> getPublicationId(@Param("id") Long id);
+	@Query("SELECT new com.demo.dto.dto.PublicationDTO(p.id, p.title, p.content, p.datePublication) FROM Publication p WHERE p.id = :id")
+	Optional<PublicationDTO> getPublicationById(@Param("id") Long id);
 	
-	@Query("SELECT p.id, p.title, p.content, p.datePublication FROM Publication p")
-	List<Publication> getPublications();
+	@Query("SELECT new com.demo.dto.dto.PublicationDTO(p.id, p.title, p.content, p.datePublication) FROM Publication p")
+	List<PublicationDTO> getPublications();
 }

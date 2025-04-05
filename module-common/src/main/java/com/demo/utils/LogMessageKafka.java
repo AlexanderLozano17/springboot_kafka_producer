@@ -13,18 +13,18 @@ public final class LogMessageKafka {
 	/** ====================================================
     			LOGS DE PRODUCCIÓN (Producer)
 		==================================================== */
-	public static final String PRODUCER_MESSAGE_SENT = "Produciendo mensaje en tópico={} con clave={}";
-	public static final String PRODUCER_MESSAGE_SUCCESS = "Mensaje enviado exitosamente a tópico={} partición={} offset={}";
+	public static final String PRODUCER_MESSAGE_SENT = "Produciendo mensaje en tópico=%s con clave=%s";
+	public static final String PRODUCER_MESSAGE_SUCCESS = "Mensaje enviado exitosamente a tópico=%s partición=%s offset=%s";
 	public static final String PRODUCER_TIMEOUT = "Tiempo de espera al enviar mensaje a Kafka. Reintentando...";
-	public static final String PRODUCER_ERROR = "Error al enviar mensaje a Kafka: {}";
+	public static final String PRODUCER_ERROR = "Error al enviar mensaje a Kafka: %s";
 	public static final String PRODUCER_CLOSED = "Kafka Producer está cerrado. No se pueden enviar mensajes.";
 		
 	/** ====================================================
 				LOGS DE PARTICIONES Y CONECTIVIDAD
 		==================================================== */
-	public static final String PARTITION_ASSIGNMENT = "Asignando particiones: {}";
+	public static final String PARTITION_ASSIGNMENT = "Asignando particiones: %s";
 	public static final String PARTITION_REBALANCE = "Rebalanceo detectado. Nueva asignación de particiones.";
-	public static final String BROKER_CONNECTION_ERROR = "No se puede conectar al broker Kafka: {}";
+	public static final String BROKER_CONNECTION_ERROR = "No se puede conectar al broker Kafka: %s";
 	
 	/** ====================================================
 	    		LOGS DE ERRORES GENERALES

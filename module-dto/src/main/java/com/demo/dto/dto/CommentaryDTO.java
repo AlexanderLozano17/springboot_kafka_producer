@@ -20,7 +20,7 @@ public class CommentaryDTO implements Serializable {
 	@JsonProperty("person_id")
 	private Long person_id;
 	
-	@JsonProperty("dateComentary")
+	@JsonProperty("dateCommentary")
 	private LocalDate dateCommentary;
 	
 	@JsonProperty("content")
@@ -78,28 +78,28 @@ public class CommentaryDTO implements Serializable {
 	}
 
 	/**
-	 * @return the dateComentary
+	 * @return the dateCommentary
 	 */
 	public LocalDate getDateCommentary() {
 		return dateCommentary;
 	}
 
 	/**
-	 * @param dateComentary the dateComentary to set
+	 * @param dateCommentary the dateCommentary to set
 	 */
-	public void setDateComentary(LocalDate dateCommentary) {
+	public void setDateCommentary(LocalDate dateCommentary) {
 		this.dateCommentary = dateCommentary;
 	}
 
 	/**
-	 * @return the comentary
+	 * @return the content
 	 */
 	public String getContent() {
 		return content;
 	}
 
 	/**
-	 * @param comentary the comentary to set
+	 * @param content the content to set
 	 */
 	public void setContent(String content) {
 		this.content = content;

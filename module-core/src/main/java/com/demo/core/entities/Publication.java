@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name ="Publication")
+@Table(name ="publication")
 public class Publication implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,7 +33,7 @@ public class Publication implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "person_id", nullable = false) // Define la clave foránea
-	@JsonBackReference // Esto evita la recursión infinita
+	@JsonBackReference(value = "person-publication") // Esto evita la recursión infinita
 	private Person person;
 	
 	private String title;
@@ -44,15 +45,10 @@ public class Publication implements Serializable {
 	private LocalDate datePublication;
 	
 	@OneToMany(mappedBy = "publication", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "publication-commentary") // Evita la recursión infinita
 	private List<Commentary> commentaries;
 	
 	public Publication() {}
-	
-    public Publication(Person person, String title, String content) {
-        this.person = person;
-        this.title = title;
-        this.content = content;
-    }
 	
 	@PrePersist // Se ejecuta antes de guardar en la BD
     public void prePersist() {
@@ -130,16 +126,16 @@ public class Publication implements Serializable {
 	}
 
 	/**
-	 * @return the comentary
+	 * @return the commentary
 	 */
-	public List<Commentary> getComentaries() {
+	public List<Commentary> getCommentaries() {
 		return commentaries;
 	}
 
 	/**
-	 * @param comentary the comentary to set
+	 * @param commentary the commentary to set
 	 */
-	public void setComentaries(List<Commentary> commentaries) {
+	public void setCommentaries(List<Commentary> commentaries) {
 		this.commentaries = commentaries;
 	}
-}
+}	

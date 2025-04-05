@@ -8,12 +8,16 @@ import com.demo.dto.dto.PublicationDTO;
 
 public interface PublicationService {
 	
-	Optional<PublicationDTO> save(Publication publicacion);
+	Optional<PublicationDTO> createPublication(Publication publicacion);
 	
-	Optional<PublicationDTO> getPublicationId(Long id);
+	Optional<PublicationDTO> getPublicationById(Long id);
 	
-	List<PublicationDTO> getPublications();
+	List<PublicationDTO> getAllPublications();
 	
-	Optional<Publication> getPublicationPerson(Long id);
+	Optional<Publication> getPublicationWithPersonDetails(Long id);
+	
+	boolean deletePublicationById(Long id);
+	
+	boolean existPublicationById(Long id);
 
 }

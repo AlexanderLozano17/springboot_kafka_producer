@@ -23,7 +23,7 @@ public final class ApiMessages {
     public static final String RECORD_NOT_FOUND = "Registro no encontrado";
     public static final String UPDATE_SUCCESS = "Registro actualizado correctamente";
     public static final String SAVE_SUCCESS = "Registro guardado correctamente";
-    public static final String DELETE_SUCCESS = "Registro eliminado correctamente ID {}";
+    public static final String DELETE_SUCCESS = "Registro eliminado correctamente ID %s";
     public static final String NO_CONTENT = "La solicitud se procesó correctamente, pero no hay contenido disponible.";
     
     /** ====================================================

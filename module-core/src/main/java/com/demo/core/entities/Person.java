@@ -3,6 +3,8 @@ package com.demo.core.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,9 +40,11 @@ public class Person implements Serializable{
 	private String telephone;
 	
 	@OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "person-publication") // Evita la recursión infinita
 	private List<Publication> publications;
 	
 	@OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference(value = "person-commentary") // Evita la recursión infinita
 	private List<Commentary> commentaries;
 	
 	public Person() {}
@@ -144,16 +148,16 @@ public class Person implements Serializable{
 	}
 
 	/**
-	 * @return the comentaries
+	 * @return the getCommentaries
 	 */
-	public List<Commentary> getComentaries() {
+	public List<Commentary> getCommentaries() {
 		return commentaries;
 	}
 
 	/**
-	 * @param comentaries the comentaries to set
+	 * @param commentaries the commentaries to set
 	 */
-	public void setComentaries(List<Commentary> commentaries) {
+	public void setCommentaries(List<Commentary> commentaries) {
 		this.commentaries = commentaries;
 	}
 }

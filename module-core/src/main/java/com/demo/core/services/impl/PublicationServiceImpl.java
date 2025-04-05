@@ -16,6 +16,7 @@ import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPublicationService;
 import com.demo.utils.LogHelper;
+import com.demo.utils.LogPerson;
 import com.demo.utils.LogPublication;
 
 @Service
@@ -33,44 +34,44 @@ public class PublicationServiceImpl implements PublicationService {
     }
 	
 	@Override
-	public Optional<PublicationDTO> save(Publication publicacion) {
-		logger.info(LogHelper.start(getClass(), "save"));
+	@Transactional
+	public Optional<PublicationDTO> createPublication(Publication publicacion) {
+		logger.info(LogHelper.start(getClass(), "createPublication"));
 		
 	    try {
-	        Publication savedPublication = publicationRepository.save(publicacion);	 
-	        logger.info(LogHelper.success(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savedPublication.getId())));
-	        
-	        PublicationDTO publicationOpt = publicationDTO(savedPublication);
-	        
+	        Publication savedPublication = publicationRepository.save(publicacion);	 	        
 	        String mensaje = String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savedPublication.getId());
+	        logger.info(LogHelper.success(getClass(), "createPublication", mensaje));
 	        
+	        PublicationDTO publicationOpt = publicationDTO(savedPublication);        
 	        producerService.sendMessageRecordPublication(new ResponseKafka(mensaje, publicationOpt));
 	   
 	        return Optional.of(publicationOpt);
 	        
 	    } catch (Exception e) {
-	    	logger.info(LogHelper.error(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_ERROR, e.getMessage())), e);
+	    	logger.info(LogHelper.error(getClass(), "createPublication", String.format(LogPublication.PUBLICATION_SAVE_ERROR, e.getMessage())), e);
 	        return Optional.empty();
 	    }
 	}
 
-
 	@Override
-	public Optional<PublicationDTO> getPublicationId(Long id) {
-		logger.info(LogHelper.start(getClass(), "getPublicationId"));
-		return Optional.of(publicationDTO(publicationRepository.getPublicationId(id).get()));
-	}
-
-	@Override
-	public List<PublicationDTO> getPublications() {
-		logger.info(LogHelper.start(getClass(), "getPublications"));
-		return getPublicationDTO(publicationRepository.getPublications());
+	@Transactional(readOnly = true)
+	public Optional<PublicationDTO> getPublicationById(Long id) {
+		logger.info(LogHelper.start(getClass(), "getPublicationById"));		
+		return Optional.of(publicationRepository.getPublicationById(id).get());
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Publication> getPublicationPerson(Long id) {
-		logger.info(LogHelper.start(getClass(), "getPublicationPerson"));
+	public List<PublicationDTO> getAllPublications() {
+		logger.info(LogHelper.start(getClass(), "getAllPublications"));
+		return publicationRepository.getPublications();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<Publication> getPublicationWithPersonDetails(Long id) {
+		logger.info(LogHelper.start(getClass(), "getPublicationWithPersonDetails"));
 		
 		try {
 			return publicationRepository.findById(id);
@@ -80,9 +81,31 @@ public class PublicationServiceImpl implements PublicationService {
 			return Optional.empty();
 		}
 	}
+
+	@Override
+	@Transactional
+	public boolean deletePublicationById(Long id) {
+		logger.info(LogHelper.start(getClass(), "deletePublicationById"));
+				
+		if (!publicationRepository.existsById(id)) {
+			logger.warn(LogHelper.warn(getClass(), "deletePublicationById", String.format(LogPublication.PUBLICATION_NOT_FOUND, id)));
+			return false;
+		}
+		
+		publicationRepository.deleteById(id);
+		logger.info(LogHelper.success(getClass(), "deletePublicationById", String.format(LogPublication.PUBLICATION_DELETE_SUCCESS, id)));
+		return true;	
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public boolean existPublicationById(Long id) {	
+		logger.info(LogHelper.start(getClass(), "existPublicationById"));
+		return publicationRepository.existsById(id);
+	}
 	
 	/** 
-	 * @param Comentary
+	 * @param Commentary
 	 * @return
 	 */
 	private PublicationDTO publicationDTO(Publication publication) {

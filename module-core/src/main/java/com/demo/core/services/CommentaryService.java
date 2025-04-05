@@ -8,12 +8,12 @@ import com.demo.dto.dto.CommentaryDTO;
 
 public interface CommentaryService {
 
-	Optional<CommentaryDTO> save(Commentary commentary);
+	Optional<CommentaryDTO> createCommentary(Commentary commentary);
 	
 	Optional<CommentaryDTO> getCommentaryById(Long id);
 	
-	List<Commentary> getCommentaries();
+	List<Commentary> getAllCommentaries();
 	
-	boolean deleteById(Long id);
+	boolean deleteCommentaryById(Long id);
 	
 }

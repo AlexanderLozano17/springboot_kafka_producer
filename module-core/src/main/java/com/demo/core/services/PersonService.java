@@ -8,16 +8,16 @@ import com.demo.dto.dto.PersonDTO;
 
 public interface PersonService {
 	
-	Optional<PersonDTO> save(Person person);
+	Optional<PersonDTO> createPerson(Person person);
 	
-	Optional<Person> getPersonsPublications(Long personaId);
+	Optional<PersonDTO> getPersonWithPublications(Long personaId);
 	
-	List<Person> getPersonsPublications();
+	List<Person> getAllPeopleWithPublications();
 	
-	Optional<PersonDTO> getPersonBasicById(Long id);
+	Optional<PersonDTO> getPersonBasicDetails(Long id);
 	
 	List<PersonDTO> getAllPersons();
 
-	boolean deleteById(Long id);
+	boolean deletePersonById(Long id);
 	
 }

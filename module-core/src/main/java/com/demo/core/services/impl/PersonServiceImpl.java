@@ -13,10 +13,10 @@ import com.demo.core.entities.Person;
 import com.demo.core.repositories.PersonRepository;
 import com.demo.core.services.PersonService;
 import com.demo.dto.dto.PersonDTO;
+import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPersonService;
 import com.demo.utils.LogHelper;
-import com.demo.utils.LogMessageKafka;
 import com.demo.utils.LogPerson;
 import com.demo.utils.LogPublication;
 
@@ -35,33 +35,54 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
-	public Optional<PersonDTO> save(Person person) {
-		logger.info(LogHelper.start(getClass(), "save"));
+	@Transactional
+	public Optional<PersonDTO> createPerson(Person person) {
+		logger.info(LogHelper.start(getClass(), "createPerson"));
 		try {
 			Person savePerson = personRepository.save(person);	
-			logger.info(LogHelper.success(getClass(), "save", String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, savePerson.getId())));
+			String message = String.format(LogPerson.PERSON_SAVE_SUCCESS, savePerson.getId());
+			logger.info(LogHelper.success(getClass(), "createPerson", message));
 			
 			PersonDTO personDTO = personDTO(savePerson);
-			producerService.sendMessageRecordPerson(new ResponseKafka(String.format(LogPerson.PERSON_SAVE_SUCCESS, savePerson.getId()), personDTO)); 		 
+			producerService.sendMessageRecordPerson(new ResponseKafka(message, personDTO)); 		 
 			 
 			return Optional.of(personDTO); 	
 			
 		} catch (Exception e) {
-			logger.error(LogHelper.error(getClass(), "save", String.format(LogPerson.PERSON_SAVE_ERROR, e.getMessage())), e);
+			logger.error(LogHelper.error(getClass(), "createPerson", String.format(LogPerson.PERSON_SAVE_ERROR, e.getMessage())), e);
 			return Optional.empty();
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Person> getPersonsPublications(Long id) {
-		logger.info(LogHelper.start(getClass(), "getPersonsPublications"));
-		return personRepository.findById(id);
+	public Optional<PersonDTO> getPersonWithPublications(Long id) {
+		logger.info(LogHelper.start(getClass(), "getPersonWithPublications"));
+		
+		Optional<Person> personWithPublications = personRepository.findById(id);
+		
+		PersonDTO personDTO = new  PersonDTO(personWithPublications.get().getId(), 
+				personWithPublications.get().getNames(), 
+				personWithPublications.get().getLastNames(),
+				personWithPublications.get().getAge(), 
+				personWithPublications.get().getEmail(), 
+				personWithPublications.get().getTelephone());
+		
+		List<PublicationDTO> listPublicationsDTO = personWithPublications.get().getPublications().stream()
+				.map(publication -> new PublicationDTO(publication.getId(),
+						publication.getTitle(), 
+						publication.getContent(), 
+						publication.getDatePublication())).collect(Collectors.toList());
+		
+		personDTO.setPublications(listPublicationsDTO);	
+		
+		return Optional.of(personDTO);
 	}
 	
+	@Override
 	@Transactional(readOnly = true)
-	public List<Person> getPersonsPublications() {
-		logger.info(LogHelper.start(getClass(), "getPersonsPublications"));
+	public List<Person> getAllPeopleWithPublications() {
+		logger.info(LogHelper.start(getClass(), "getAllPeopleWithPublications"));
 		return personRepository.findAll();
 	}
 
@@ -73,24 +94,25 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public Optional<PersonDTO> getPersonBasicById(Long id) { 
-		logger.info(LogHelper.start(getClass(), "getPersonBasicById"));
+	@Transactional(readOnly = true)
+	public Optional<PersonDTO> getPersonBasicDetails(Long id) { 
+		logger.info(LogHelper.start(getClass(), "getPersonBasicDetails"));
 		return personRepository.findPersonaBasicById(id);
 	}
 	
 	@Override
-	public boolean deleteById(Long id) {
-		logger.info(LogHelper.start(getClass(), "deleteById"));
+	@Transactional
+	public boolean deletePersonById(Long id) {
+		logger.info(LogHelper.start(getClass(), "deletePersonById"));
 		
-		if (!personRepository.existsById(id))  return false;		
-		try {
-			personRepository.deleteById(id);
-			logger.info(LogHelper.success(getClass(), "deleteById", String.format(LogPerson.PERSON_DELETE_SUCCESS, id)));
-			return true;
-		} catch (Exception e) {
-			logger.info(LogHelper.success(getClass(), "deleteById", String.format(LogPerson.PERSON_DELETE_ERROR, e.getMessage())), e);
-			return false;
-		}		
+		if (!personRepository.existsById(id)) {
+			logger.warn(LogHelper.warn(getClass(), "deletePersonById", String.format(LogPerson.PERSON_NOT_FOUND, id)));
+			return false;		
+		}
+
+		personRepository.deleteById(id);
+		logger.info(LogHelper.success(getClass(), "deletePersonById", String.format(LogPerson.PERSON_DELETE_SUCCESS, id)));
+		return true;			
 	}
 	
 	/**
@@ -117,5 +139,4 @@ public class PersonServiceImpl implements PersonService {
 		logger.info(LogHelper.start(getClass(), "getPersonDTO"));
 		return listPerson.stream().map(person -> personDTO(person)).collect(Collectors.toList());
 	}
-	
 }

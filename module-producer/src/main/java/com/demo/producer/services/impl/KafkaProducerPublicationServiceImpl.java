@@ -26,7 +26,7 @@ public class KafkaProducerPublicationServiceImpl implements KafkaProducerPublica
 	
 	@Override
 	public void sendMessageRecordPublication(Object message) {
-		logger.info(LogHelper.start(getClass(), LogMessageKafka.PRODUCER_MESSAGE_SENT));
+		logger.info(LogHelper.start(getClass(), String.format(LogMessageKafka.PRODUCER_MESSAGE_SENT, ConstantsKafka.TOPIC_PUBLICATIONS, "")));
 		
 		CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(ConstantsKafka.TOPIC_PUBLICATIONS, message);
 		

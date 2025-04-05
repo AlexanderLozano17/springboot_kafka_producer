@@ -3,14 +3,17 @@ package com.demo.core.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,27 +26,27 @@ public class Commentary implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "publication_id") // Define la clave foranea
+	@JsonBackReference(value = "publication-commentary")
 	private Publication publication;
 	
 	@ManyToOne
 	@JoinColumn(name = "person_id") // Define la clave foranea
+	@JsonBackReference(value = "person-commentary")
 	private Person person;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate dateComentary;
+	private LocalDate dateCommentary;
 	
 	private String content;
 	
 	public Commentary() {}
 	
-    public Commentary(Publication publication, Person person, String content) {
-        this.publication = publication;
-        this.person = person;
-        this.content = content;
-        this.dateComentary = LocalDate.now(); // Fecha por defecto al crear
-    }
+	@PrePersist
+	public void prePersist() {
+		this.dateCommentary = LocalDate.now();
+	}
 
 	/**
 	 * @return the id
@@ -88,28 +91,28 @@ public class Commentary implements Serializable {
 	}
 
 	/**
-	 * @return the dateComentary
+	 * @return the dateCommentary
 	 */
-	public LocalDate getDateComentary() {
-		return dateComentary;
+	public LocalDate getDateCommentary() {
+		return dateCommentary;
 	}
 
 	/**
-	 * @param dateComentary the dateComentary to set
+	 * @param dateCommentary the dateCommentary to set
 	 */
-	public void setDateComentary(LocalDate dateComentary) {
-		this.dateComentary = dateComentary;
+	public void setDateCommentary(LocalDate dateCommentary) {
+		this.dateCommentary = dateCommentary;
 	}
 
 	/**
-	 * @return the comentary
+	 * @return the commentary
 	 */
 	public String getContent() {
 		return content;
 	}
 
 	/**
-	 * @param comentary the comentary to set
+	 * @param commentary the commentary to set
 	 */
 	public void setContent(String content) {
 		this.content = content;

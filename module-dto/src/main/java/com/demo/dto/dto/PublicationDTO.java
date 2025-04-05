@@ -3,6 +3,7 @@ package com.demo.dto.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,7 +27,7 @@ public class PublicationDTO implements Serializable {
 	private LocalDate datePublication;
 	
 	@JsonProperty("commentaries")
-	private List<CommentaryDTO> commentaries;
+	private List<CommentaryDTO> commentaries = new ArrayList<>();
 		
     public PublicationDTO(Long id, String title, String content, LocalDate datePublication) {
         this.id = id;
@@ -92,14 +93,14 @@ public class PublicationDTO implements Serializable {
 	}
 
 	/**
-	 * @return the comentaries
+	 * @return the commentaries
 	 */
 	public List<CommentaryDTO> getCommentaries() {
 		return commentaries;
 	}
 
 	/**
-	 * @param comentaries the comentaries to set
+	 * @param commentaries the commentaries to set
 	 */
 	public void setCommentaries(List<CommentaryDTO> commentaries) {
 		this.commentaries = commentaries;

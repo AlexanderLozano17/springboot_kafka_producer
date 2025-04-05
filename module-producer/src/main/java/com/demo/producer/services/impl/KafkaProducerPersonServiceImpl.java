@@ -27,7 +27,7 @@ public class KafkaProducerPersonServiceImpl implements KafkaProducerPersonServic
 
 	@Override
 	public void sendMessageRecordPerson(Object message) {
-		logger.info(LogHelper.start(getClass(), LogMessageKafka.PRODUCER_MESSAGE_SENT));
+		logger.info(LogHelper.start(getClass(), String.format(LogMessageKafka.PRODUCER_MESSAGE_SENT, ConstantsKafka.TOPIC_PERSONS, "")));
 		
 		CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(ConstantsKafka.TOPIC_PERSONS, message);
 		

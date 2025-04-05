@@ -10,5 +10,5 @@ public class ConstantsKafka {
 	public static final String TOPIC_TEST = "topic-test";
 	public static final String TOPIC_PERSONS = "topic-persons";
 	public static final String TOPIC_PUBLICATIONS = "topic-publications";
-	public static final String TOPIC_COMENTARIES = "topic-comentaries";
+	public static final String TOPIC_COMMENTARIES = "topic-commentaries";
 }
