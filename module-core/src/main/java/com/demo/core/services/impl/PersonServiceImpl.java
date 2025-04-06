@@ -97,7 +97,7 @@ public class PersonServiceImpl implements PersonService {
 	@Transactional(readOnly = true)
 	public Optional<PersonDTO> getPersonBasicDetails(Long id) { 
 		logger.info(LogHelper.start(getClass(), "getPersonBasicDetails"));
-		return personRepository.findPersonaBasicById(id);
+		return personRepository.findPersonBasicById(id);
 	}
 	
 	@Override

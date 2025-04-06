@@ -11,12 +11,13 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: ${DRIVER_CLASS_NAME}
   
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: ${DATABASE_PLATFORM}
     properties:
       hibernate.format_sql: true
 

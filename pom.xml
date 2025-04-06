@@ -9,6 +9,19 @@
 	<artifactId>springboot_kafka_producer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	
+	<developers>
+		<developer>
+			<name>José Alexander Lozano Velasco</name>
+			<email>alexanderlozano950@gmail.com</email>
+			<organizationUrl>https://www.linkedin.com/in/alexander-lozano-262b54a3/</organizationUrl>
+		</developer>
+	</developers>
+	
+	<!-- Informacion del repositorio SCM -->
+	<scm>
+		<url>https://github.com/AlexanderLozano17/springboot_kafka_producer.git</url>
+	</scm>
 
 	<modules>
 		<module>main-app</module>

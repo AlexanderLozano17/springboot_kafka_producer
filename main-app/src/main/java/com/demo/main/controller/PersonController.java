@@ -44,12 +44,14 @@ public class PersonController {
             Optional<PersonDTO> optionalPerson = personService.createPerson(person);            
             if (optionalPerson.isPresent()) {
                 logger.info(LogHelper.success(getClass(), "createPerson", String.format(LogPerson.PERSON_SAVE_SUCCESS, optionalPerson.get().getId())));
-                return ResponseEntity.status(HttpStatus.CREATED).body(responseApi(ApiMessages.SUCCESS, ApiMessages.SAVE_SUCCESS, optionalPerson.get()));
+                logger.info(LogHelper.end(getClass(), "createPerson"));
+                return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.SAVE_SUCCESS, optionalPerson.get()));
             }             
         } catch (Exception e) {
             logger.error(LogHelper.error(getClass(), "createPerson", e.getMessage()), e);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+        logger.info(LogHelper.end(getClass(), "createPerson"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
     }
 
 
@@ -61,36 +63,65 @@ public class PersonController {
 			Optional<PersonDTO> person = personService.getPersonBasicDetails(id);
 			if (person.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "getPersonBasicDetails", String.format(LogPerson.PERSON_FOUND, id)));
-				return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, person.get()));
+				logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, person.get()));
 			} 
 			
 			logger.warn(LogHelper.warn(getClass(), "getPersonBasicDetails", String.format(LogPerson.PERSON_NOT_FOUND, id)));
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+			logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 		
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getPersonBasicDetails", e.getMessage()), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+		}
+	}
+	
+	@GetMapping
+	public ResponseEntity<ResponseApi<List<PersonDTO>>> getAllPersons() {
+		 logger.info(LogHelper.start(getClass(), "getAllPerson"));
+		 
+		try {
+			List<PersonDTO> personDTOs = personService.getAllPersons();
+			if (!personDTOs.isEmpty()) {
+				logger.info(LogHelper.success(getClass(), "getAllPerson", String.format(LogPerson.PERSON_LIST_SUCCESS, personDTOs.size())));
+				logger.info(LogHelper.end(getClass(), "getAllPersons"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, personDTOs));
+			} 
+			
+			logger.warn(LogHelper.warn(getClass(), "getAllPerson", String.format(LogPerson.PERSON_LIST_SUCCESS, 0)));
+			logger.info(LogHelper.end(getClass(), "getAllPersons"));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+		
+		} catch (Exception e) {
+			logger.error(LogHelper.error(getClass(), "getAllPerson", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "getAllPersons"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
 			
-	@GetMapping("/{personaId}/publicaciones")
-	public ResponseEntity<ResponseApi<PersonDTO>> getPersonWithPublications(@PathVariable Long personaId) {
+	@GetMapping("/{personId}/publicaciones")
+	public ResponseEntity<ResponseApi<PersonDTO>> getPersonWithPublications(@PathVariable Long personId) {
 		logger.info(LogHelper.start(getClass(), "getPersonWithPublications"));
 		
 		try {			
-			Optional<PersonDTO> personPublicationDTO = personService.getPersonWithPublications(personaId);			
+			Optional<PersonDTO> personPublicationDTO = personService.getPersonWithPublications(personId);			
 			if (personPublicationDTO.isPresent()) {
 
-				logger.info(LogHelper.success(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_FOUND, personaId)));
-				return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, personPublicationDTO.get()));	
+				logger.info(LogHelper.success(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_FOUND, personId)));
+				logger.info(LogHelper.end(getClass(), "getPersonWithPublications"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, personPublicationDTO.get()));	
 			}
 			
-			logger.warn(LogHelper.warn(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_NOT_FOUND, personaId)));
-			return ResponseEntity.status(HttpStatus.OK).body(responseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
+			logger.warn(LogHelper.warn(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_NOT_FOUND, personId)));
+			logger.info(LogHelper.end(getClass(), "getPersonWithPublications"));
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getPersonWithPublications", LogPerson.PERSON_LIST_ERROR));
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "getPersonWithPublications"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
 	
@@ -102,14 +133,18 @@ public class PersonController {
 			List<Person> personPublications = personService.getAllPeopleWithPublications();			
 			if (!personPublications.isEmpty()) {
 				logger.info(LogHelper.success(getClass(), "getAllPeopleWithPublications", String.format(LogPerson.PERSON_LIST_SUCCESS, personPublications.size())));
-				return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, personPublications));
+				logger.info(LogHelper.end(getClass(), "getAllPeopleWithPublications"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, personPublications));
 			}
 			
 			logger.warn(LogHelper.warn(getClass(), "getAllPeopleWithPublications", LogPerson.PERSON_NOT_FOUND));
-			return ResponseEntity.status(HttpStatus.OK).body(responseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
+			logger.info(LogHelper.end(getClass(), "getAllPeopleWithPublications"));
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
+			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getAllPeopleWithPublications", LogPerson.PERSON_LIST_ERROR));
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "getAllPeopleWithPublications"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
 	
@@ -120,29 +155,18 @@ public class PersonController {
 		try {
 			if (personService.deletePersonById(id)) {
 				logger.info(LogHelper.success(getClass(), "deletePersonById", String.format(LogPerson.PERSON_DELETE_SUCCESS, id)));
-				return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, String.format(ApiMessages.DELETE_SUCCESS, id), null));
+				logger.info(LogHelper.end(getClass(), "deletePersonById"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, String.format(ApiMessages.DELETE_SUCCESS, id), null));
 			} else {
 				logger.error(LogHelper.error(getClass(), "deletePersonById", String.format(LogPerson.PERSON_NOT_FOUND, id)));
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+				logger.info(LogHelper.end(getClass(), "deletePersonById"));
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 			}
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "deletePersonById", LogPerson.PERSON_DELETE_ERROR));
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "deletePersonById"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 		
 	}
-		
-	/**
-	 * 
-	 * @param <T>
-	 * @param statusCode
-	 * @param message
-	 * @param dataObject
-	 * @return
-	 */
-	private <T> ResponseApi<T> responseApi(String status, String message, T dataObject) {
-		logger.info(LogHelper.start(getClass(), "responseApi"));
-		return new ResponseApi(status, message, dataObject);
-	}
-		
 }

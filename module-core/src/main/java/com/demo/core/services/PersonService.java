@@ -8,16 +8,44 @@ import com.demo.dto.dto.PersonDTO;
 
 public interface PersonService {
 	
+	/**
+	 * 
+	 * @param person
+	 * @return
+	 */
 	Optional<PersonDTO> createPerson(Person person);
 	
-	Optional<PersonDTO> getPersonWithPublications(Long personaId);
+	/**
+	 * 
+	 * @param personaId
+	 * @return
+	 */
+	Optional<PersonDTO> getPersonWithPublications(Long personId);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	List<Person> getAllPeopleWithPublications();
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	Optional<PersonDTO> getPersonBasicDetails(Long id);
 	
+	/**
+	 * 
+	 * @return
+	 */
 	List<PersonDTO> getAllPersons();
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	boolean deletePersonById(Long id);
 	
 }

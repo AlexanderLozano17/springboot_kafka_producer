@@ -13,7 +13,7 @@ import com.demo.dto.dto.PublicationDTO;
 
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
 
-	@EntityGraph(attributePaths = {"persona"})
+	@EntityGraph(attributePaths = {"person"})
 	Optional<Publication> findById(Long id);
 		
 	@Query("SELECT new com.demo.dto.dto.PublicationDTO(p.id, p.title, p.content, p.datePublication) FROM Publication p WHERE p.id = :id")

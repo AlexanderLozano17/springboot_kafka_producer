@@ -1,7 +1,7 @@
 package com.demo.utils;
 
 /**
- * La clase LogPersona es una clase de constantes utilizada para definir
+ * La clase LogPerson es una clase de constantes utilizada para definir
  * mensajes de log específicos en el módulo de gestión de personas de la
  * aplicación.
  */

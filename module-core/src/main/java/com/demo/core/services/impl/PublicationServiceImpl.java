@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.demo.core.entities.Publication;
 import com.demo.core.repositories.PublicationRepository;
 import com.demo.core.services.PublicationService;
+import com.demo.dto.dto.CommentaryDTO;
 import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPublicationService;
@@ -59,6 +60,29 @@ public class PublicationServiceImpl implements PublicationService {
 	public Optional<PublicationDTO> getPublicationById(Long id) {
 		logger.info(LogHelper.start(getClass(), "getPublicationById"));		
 		return Optional.of(publicationRepository.getPublicationById(id).get());
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<PublicationDTO> getPublicationWithComments(Long id) {
+		logger.info(LogHelper.start(getClass(), "getPublicationWithComments"));		
+		
+		Publication publication = publicationRepository.findById(id).get();
+		
+		PublicationDTO publicationDTO = new PublicationDTO(publication.getId(), 
+														publication.getTitle(),
+														publication.getContent(), 
+														publication.getDatePublication());
+		
+		List<CommentaryDTO> commentaryDTOs = publication.getCommentaries().stream()
+				.map(commentary -> new CommentaryDTO(commentary.getId(), 
+													commentary.getPublication().getId(), 
+													commentary.getPerson().getId(), 
+													commentary.getDateCommentary(), 
+													commentary.getContent())).collect(Collectors.toList());
+		publicationDTO.setCommentaries(commentaryDTOs);
+		
+		return Optional.of(publicationDTO);
 	}
 
 	@Override

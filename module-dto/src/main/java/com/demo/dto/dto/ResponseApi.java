@@ -10,6 +10,12 @@ public class ResponseApi<T> implements Serializable {
 	    private String message;   // Mensaje de respuesta (Ejemplo: "Operación exitosa")
 	    private T data;           // Datos de la respuesta (puede ser cualquier tipo genérico)
 
+	    /**
+	     * 
+	     * @param status
+	     * @param message
+	     * @param data
+	     */
 	    public ResponseApi(String status, String message, T data) {
 	        this.status = status;
 	        this.message = message;

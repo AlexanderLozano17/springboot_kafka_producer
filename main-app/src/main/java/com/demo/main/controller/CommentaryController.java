@@ -43,13 +43,15 @@ public class CommentaryController {
 			Optional<CommentaryDTO> Commentary_ = commentaryService.createCommentary(Commentary);		
 			if (Commentary_.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "createCommentary", String.format(LogCommentary.COMMENT_SAVE_SUCCESS, Commentary_.get().getId())));
-				return ResponseEntity.status(HttpStatus.CREATED).body(responseApi(ApiMessages.SUCCESS, ApiMessages.SAVE_SUCCESS, Commentary_.get()));
+				logger.info(LogHelper.end(getClass(), "createCommentary"));
+				return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.SAVE_SUCCESS, Commentary_.get()));
 			}
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "createCommentary", e.getMessage()), e);
 		}
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+		logger.info(LogHelper.end(getClass(), "createCommentary"));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 	}
 	
 	@GetMapping
@@ -60,14 +62,17 @@ public class CommentaryController {
 			List<Commentary> commentaries = commentaryService.getAllCommentaries();
 			if (!commentaries.isEmpty()) {
 				logger.info(LogHelper.success(getClass(), "getAllCommentaries", String.format(LogCommentary.COMMENT_LIST_SUCCESS, commentaries.size())));
-				return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, commentaries));
+				logger.info(LogHelper.end(getClass(), "getAllCommentaries"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, commentaries));
 			} 
 			
 			logger.warn(LogHelper.warn(getClass(), "getAllCommentaries", String.format(LogCommentary.COMMENT_NOT_FOUND, 0)));
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+			logger.info(LogHelper.end(getClass(), "getAllCommentaries"));
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getAllCommentaries", e.getMessage()), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "getAllCommentaries"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
 
@@ -79,14 +84,17 @@ public class CommentaryController {
 			Optional<CommentaryDTO> comentario = commentaryService.getCommentaryById(id);
 			if (comentario.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "getCommentaryById", String.format(LogCommentary.COMMENT_FOUND, id)));
-				return ResponseEntity.status(HttpStatus.OK).body(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, comentario.get()));
+				logger.info(LogHelper.end(getClass(), "getCommentaryById"));
+				return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, comentario.get()));
 			}
 			
 			logger.warn(LogHelper.warn(getClass(), "getCommentaryById", String.format(LogCommentary.COMMENT_NOT_FOUND, id)));
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+			logger.info(LogHelper.end(getClass(), "getCommentaryById"));
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getCommentaryById", e.getMessage()), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+			logger.info(LogHelper.end(getClass(), "getCommentaryById"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}	
 	}
 	
@@ -97,22 +105,12 @@ public class CommentaryController {
 		boolean esEliminado = commentaryService.deleteCommentaryById(id);
 		if (esEliminado) {
 			logger.info(LogHelper.success(getClass(), "deleteCommentaryById", String.format(LogCommentary.COMMENT_DELETE_SUCCESS, id)));
-			return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, String.format(ApiMessages.DELETE_SUCCESS, id), null));
+			logger.info(LogHelper.end(getClass(), "deleteCommentaryById"));
+			return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, String.format(ApiMessages.DELETE_SUCCESS, id), null));
 		}
 		logger.warn(LogHelper.warn(getClass(), "deleteCommentaryById", String.format(LogCommentary.COMMENT_NOT_FOUND, id)));
-		return ResponseEntity.ok(responseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+		logger.info(LogHelper.end(getClass(), "deleteCommentaryById"));
+		return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 
-	}
-	
-	/**
-	 * 
-	 * @param statusCode
-	 * @param message
-	 * @param persona
-	 * @return
-	 */
-	private <T> ResponseApi<T> responseApi(String status, String message, T dataObject) {
-		logger.info(LogHelper.start(getClass(), "responseApi"));
-		return new ResponseApi(status, message, dataObject);
 	}
 }

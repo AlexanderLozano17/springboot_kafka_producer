@@ -161,7 +161,7 @@ public class PersonDTO implements Serializable {
 
 	@Override
     public String toString() {
-        return "PersonaDTO{" +
+        return "PersonDTO{" +
                 ", nombres='" + names + '\'' +
                 ", apellidos='" + lastNames + '\'' +
                 ", edad=" + age +

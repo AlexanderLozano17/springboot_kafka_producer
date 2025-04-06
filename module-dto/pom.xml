@@ -17,12 +17,7 @@
 	<description>Módulo dto del sistema: DTO</description>
 	
 	 <dependencies>
-        <!-- Se heredan automáticamente las dependencias del padre -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        
+        <!-- Se heredan automáticamente las dependencias del padre -->        
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

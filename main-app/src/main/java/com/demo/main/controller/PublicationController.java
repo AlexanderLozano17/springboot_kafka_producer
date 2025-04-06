@@ -42,11 +42,13 @@ public class PublicationController {
 			Optional<PublicationDTO> publication_ = publicationService.createPublication(publication);
 			if (publication_.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "createPublication", String.format(LogPublication.PUBLICATION_SAVE_SUCCESS, publication_.get().getId())));
+				logger.info(LogHelper.end(getClass(), "createPublication"));
 				return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.SAVE_SUCCESS, publication_.get()));
 			}						
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "createPublication", e.getMessage()), e);
 		}
+		logger.info(LogHelper.end(getClass(), "createPublication"));
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 	}
 	
@@ -58,10 +60,12 @@ public class PublicationController {
 			Optional<PublicationDTO> publication = publicationService.getPublicationById(id);
 			if (publication.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "getPublicationById", String.format(LogPublication.PUBLICATION_FOUND, id)));
+				logger.info(LogHelper.end(getClass(), "getPublicationById"));
 				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, publication.get()));
 			}
 			
 			logger.warn(LogHelper.warn(getClass(), "getPublicationById", String.format(LogPublication.PUBLICATION_NOT_FOUND, id)));
+			logger.info(LogHelper.end(getClass(), "getPublicationById"));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 			
 		} catch (Exception e) {
@@ -75,17 +79,20 @@ public class PublicationController {
 		logger.info(LogHelper.start(getClass(), "getAllPublications"));
 		
 		try {
-			List<PublicationDTO> publication = publicationService.getAllPublications();
-			if (!publication.isEmpty()) {
-				logger.info(LogHelper.success(getClass(), "getAllPublications", String.format(LogPublication.PUBLICATION_LIST_SUCCESS, publication.size())));
-				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, publication));
+			List<PublicationDTO> publications = publicationService.getAllPublications();
+			if (!publications.isEmpty()) {
+				logger.info(LogHelper.success(getClass(), "getAllPublications", String.format(LogPublication.PUBLICATION_LIST_SUCCESS, publications.size())));
+				logger.info(LogHelper.end(getClass(), "getAllPublications"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.LIST_SUCCESS, publications));
 			}
 			
 			logger.warn(LogHelper.warn(getClass(), "getAllPublications", LogPublication.PUBLICATION_NOT_FOUND));
+			logger.info(LogHelper.end(getClass(), "getAllPublications"));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));			
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getAllPublications", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "getAllPublications"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));	
 		}
 	}	
@@ -98,16 +105,43 @@ public class PublicationController {
 			Optional<Publication> publication = publicationService.getPublicationWithPersonDetails(publicationId);
 			if (publication.isPresent()) {
 				logger.info(LogHelper.success(getClass(), "getPublicationWithPersonDetails", String.format(LogPublication.PUBLICATION_FOUND, publicationId)));
+				logger.info(LogHelper.end(getClass(), "getPublicationWithPersonDetails"));
 				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, publication.get()));
 			}
 			
 			logger.warn(LogHelper.warn(getClass(), "getPublicationWithPersonDetails", String.format(LogPublication.PUBLICATION_NOT_FOUND, publicationId)));
+			logger.info(LogHelper.end(getClass(), "getPublicationWithPersonDetails"));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));			
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getPublicationWithPersonDetails", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "getPublicationWithPersonDetails"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));	
 		}
+	}
+	
+	@GetMapping("/{publicationId}/comentarios")
+	public ResponseEntity<ResponseApi<PublicationDTO>> getPublicationWithComments(@PathVariable Long publicationId) {
+		logger.info(LogHelper.start(getClass(), "getPublicationWithComments"));
+		
+		try {			
+			Optional<PublicationDTO> publicationDTO = publicationService.getPublicationWithComments(publicationId);
+			if (publicationDTO.isPresent()) {
+				logger.info(LogHelper.success(getClass(), "getPublicationWithComments", String.format(LogPublication.PUBLICATION_FOUND, publicationDTO.get().getId())));
+				logger.info(LogHelper.end(getClass(), "getPublicationWithComments"));
+				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, publicationDTO));				
+			}
+			
+			logger.info(LogHelper.success(getClass(), "getPublicationWithComments", String.format(LogPublication.PUBLICATION_NOT_FOUND, publicationDTO.get().getId())));
+			logger.info(LogHelper.end(getClass(), "getPublicationWithComments"));
+			return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, publicationDTO));
+			
+		} catch (Exception e) {
+			logger.info(LogHelper.error(getClass(), "getPublicationWithComments", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "getPublicationWithComments"));
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
+		}
+		
 	}
 	
 	@DeleteMapping("/{id}")
@@ -117,13 +151,16 @@ public class PublicationController {
 		try {
 			if (publicationService.deletePublicationById(id)) {
 				logger.info(LogHelper.success(getClass(), "deletePublicationById", String.format(LogPublication.PUBLICATION_DELETE_SUCCESS, id)));
+				logger.info(LogHelper.end(getClass(), "deletePublicationById"));
 				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, String.format(ApiMessages.DELETE_SUCCESS, id), null));
 			} else {
 				logger.warn(LogHelper.warn(getClass(), "deletePublicationById", String.format(LogPublication.PUBLICATION_NOT_FOUND, id)));
+				logger.info(LogHelper.end(getClass(), "deletePublicationById"));
 				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 			}
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "deletePublicationById", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "deletePublicationById"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));	
 		}
 	}

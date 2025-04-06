@@ -13,7 +13,7 @@ import com.demo.dto.dto.PersonDTO;
 public interface PersonRepository extends JpaRepository<Person, Long> {
 	
 	@Query("SELECT new com.demo.dto.dto.PersonDTO(p.id, p.names, p.lastNames, p.age, p.email, p.telephone) FROM Person p WHERE p.id = :id")
-	Optional<PersonDTO> findPersonaBasicById(@Param("id") Long id);
+	Optional<PersonDTO> findPersonBasicById(@Param("id") Long id);
 
 	@Query("SELECT new com.demo.dto.dto.PersonDTO(p.id, p.names, p.lastNames, p.age, p.email, p.telephone) FROM Person p")
 	List<PersonDTO> getAllPerons();

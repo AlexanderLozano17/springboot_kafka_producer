@@ -123,6 +123,26 @@ services:
       - kafka_network
 
 #contendor de la aplicacion
+  app:
+    build: #  Define como se construye la imagen del contenedor.
+      context: . # Usa el directorio actual como contexto de construccion.
+      dockerfile: DockerfIle # Especifica el archivo Dockerfile a utilizar
+    container_name: producerKafka
+    depends_on:
+      - postgres
+      - kafka1
+      - kafka2      
+    env_file: # Carga variables de entorno desde un archivo .env
+      - .env
+    environment: # Define variables de entorno utilizadas por la aplicación Spring Boot.
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS} #  Lista de brokers de Kafka a los que se conecta.
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL} # URL de conexión a la base de datos.
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME} # Usuario de la base de datos.
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD} # Contraseña de la base de datos.
+    ports:
+      - 8081:8081
+    networks:
+      - kafka_network
   
 
 # Red personalizada para la comunicacion entre contenedores
