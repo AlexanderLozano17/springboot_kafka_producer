@@ -1,0 +1,191 @@
+components:
+  schemas:
+
+    #=========================
+    # Schemas de Publicaciones
+    #=========================
+    Publication:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        personId:
+          type: integer
+
+    PublicationDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        datePublication:
+          type: string
+          format: date
+
+    ResponseApiPublicationDTO:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PublicationDTO'
+
+    ResponseApiPublicationDTOList:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationDTO'
+
+    ResponseApiPublication:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/Publication'
+
+    #=========================
+    # Schemas de Persona
+    #=========================
+    Person:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        publicaciones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationDTO'
+
+    PersonDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        publicaciones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationDTO'
+
+    ResponseApiPersonDTO:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/PersonDTO'
+
+    ResponseApiPersonDTOList:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonDTO'
+
+    ResponseApiPersonList:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+
+    #=========================
+    # Schemas de Comentarios
+    #=========================
+    Commentary:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        author:
+          type: string
+        publicationId:
+          type: integer
+
+    CommentaryDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        author:
+          type: string
+        publicationId:
+          type: integer
+
+    ResponseApiCommentaryDTO:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CommentaryDTO'
+
+    ResponseApiCommentaryList:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commentary'
+
+    #=========================
+    # Reutilizable
+    #=========================
+    ResponseApiString:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: string

@@ -1,0 +1,128 @@
+/publication:
+  post:
+    tags:
+      - Publicaciones
+    summary: Crear una nueva publicación
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Publication'
+    responses:
+      '201':
+        description: Publicación creada exitosamente
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiPublicationDTO'
+      '500':
+        description: Error interno del servidor
+
+  get:
+    tags:
+      - Publicaciones
+    summary: Obtener todas las publicaciones
+    responses:
+      '200':
+        description: Lista de publicaciones
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiPublicationDTOList'
+      '404':
+        description: No se encontraron publicaciones
+      '500':
+        description: Error interno del servidor
+
+/publication/{id}:
+  get:
+    tags:
+      - Publicaciones
+    summary: Obtener una publicación por ID
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: Publicación encontrada
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiPublicationDTO'
+      '404':
+        description: Publicación no encontrada
+      '500':
+        description: Error interno del servidor
+
+  delete:
+    tags:
+      - Publicaciones
+    summary: Eliminar una publicación por ID
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: Publicación eliminada exitosamente
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiString'
+      '404':
+        description: Publicación no encontrada
+      '500':
+        description: Error interno del servidor
+
+/publication/{id}/comentarios:
+  get:
+    tags:
+      - Publicaciones
+    summary: Obtener publicación con comentarios
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+    responses:
+      '200':
+        description: Publicación con comentarios encontrada
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiPublicationDTO'
+      '404':
+        description: Publicación no encontrada
+      '500':
+        description: Error interno del servidor
+
+/publication/persona-detalle/{id}:
+  get:
+    tags:
+      - Publicaciones
+    summary: Obtener publicación con comentarios y persona
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID de la publicación
+    responses:
+      '200':
+        description: Publicación encontrada con comentarios y detalles de persona
+        content:
+          application/json:
+            schema:
+              $ref: '../components/common-schemas.yml#/components/schemas/ResponseApiPublication'
+      '404':
+        description: Publicación no encontrada
+      '500':
+        description: Error interno del servidor

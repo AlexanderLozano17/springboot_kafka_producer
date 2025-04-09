@@ -2,7 +2,6 @@ package com.demo.main.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.core.entities.Person;
-import com.demo.core.entities.Publication;
 import com.demo.core.services.PersonService;
 import com.demo.dto.dto.PersonDTO;
-import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseApi;
 import com.demo.main.utils.ApiMessages;
 import com.demo.utils.LogHelper;
@@ -116,7 +113,7 @@ public class PersonController {
 			
 			logger.warn(LogHelper.warn(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_NOT_FOUND, personId)));
 			logger.info(LogHelper.end(getClass(), "getPersonWithPublications"));
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getPersonWithPublications", LogPerson.PERSON_LIST_ERROR));
@@ -139,7 +136,7 @@ public class PersonController {
 			
 			logger.warn(LogHelper.warn(getClass(), "getAllPeopleWithPublications", LogPerson.PERSON_NOT_FOUND));
 			logger.info(LogHelper.end(getClass(), "getAllPeopleWithPublications"));
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.NO_CONTENT, null));
 			
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "getAllPeopleWithPublications", LogPerson.PERSON_LIST_ERROR));
@@ -160,7 +157,7 @@ public class PersonController {
 			} else {
 				logger.error(LogHelper.error(getClass(), "deletePersonById", String.format(LogPerson.PERSON_NOT_FOUND, id)));
 				logger.info(LogHelper.end(getClass(), "deletePersonById"));
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 			}
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "deletePersonById", LogPerson.PERSON_DELETE_ERROR));

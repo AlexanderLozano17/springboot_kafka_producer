@@ -22,8 +22,17 @@ import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseApi;
 import com.demo.main.utils.ApiMessages;
 import com.demo.utils.LogHelper;
-import com.demo.utils.LogPerson;
 import com.demo.utils.LogPublication;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/publicaciones")
@@ -134,7 +143,7 @@ public class PublicationController {
 			
 			logger.info(LogHelper.success(getClass(), "getPublicationWithComments", String.format(LogPublication.PUBLICATION_NOT_FOUND, publicationDTO.get().getId())));
 			logger.info(LogHelper.end(getClass(), "getPublicationWithComments"));
-			return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, publicationDTO));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, publicationDTO));
 			
 		} catch (Exception e) {
 			logger.info(LogHelper.error(getClass(), "getPublicationWithComments", e.getMessage()), e);
@@ -156,7 +165,7 @@ public class PublicationController {
 			} else {
 				logger.warn(LogHelper.warn(getClass(), "deletePublicationById", String.format(LogPublication.PUBLICATION_NOT_FOUND, id)));
 				logger.info(LogHelper.end(getClass(), "deletePublicationById"));
-				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 			}
 		} catch (Exception e) {
 			logger.error(LogHelper.error(getClass(), "deletePublicationById", e.getMessage()), e);

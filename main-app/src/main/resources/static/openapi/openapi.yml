@@ -1,0 +1,43 @@
+openapi: 3.0.1
+info:
+  title: Spring Boot Kafka API
+  version: 1.0.0
+  description: |
+    Esta API está construida con Spring Boot y se integra con Apache Kafka 
+    para la producción y el consumo de mensajes.
+
+    El proyecto permite enviar mensajes a un topic específico de Kafka 
+    a través de endpoints REST, y también escuchar mensajes entrantes 
+    desde topics configurados.
+
+    ### Características:
+    - Envío de mensajes a Kafka mediante POST
+    - Escucha de mensajes Kafka con consumidores configurados
+    - Serialización y deserialización de objetos JSON
+    - Integración con Swagger UI mediante springdoc-openapi
+
+    ### Requisitos:
+    - Java 8+
+    - Spring Boot 2.7+ o 3.x
+    - Apache Kafka en ejecución
+    - Librerías de Spring para Kafka y OpenAPI
+
+    ### Endpoints principales:
+    - **POST /kafka/publish**: Enviar un mensaje al topic Kafka configurado
+    - **GET /kafka/messages**: (Opcional) Listar mensajes recibidos si están almacenados
+
+    Documentación generada automáticamente con `springdoc-openapi`.
+
+paths:
+  /publication:
+    $ref: "./paths/publication.yml"
+  /person:
+    $ref: "./paths/person.yml"
+  /commentary:
+    $ref: "./paths/commentary.yml"
+
+components:
+  $ref: "./components/common-schemas.yml"
+  $ref: "./components/person-schemas.yml"
+  $ref: "./components/publication-schemas.yml"
+  $ref: "./components/commentary-schemas.yml"

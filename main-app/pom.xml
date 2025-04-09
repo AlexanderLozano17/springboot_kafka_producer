@@ -33,6 +33,12 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- Dependecia de Open API -->
+        <dependency>
+	    	<groupId>org.springdoc</groupId>
+	      	<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	    </dependency>
 
 		<!--proporciona un endpoint /actuator/mappings que muestra todos los endpoints registrados en tu aplicacion.-->
 		<dependency>

@@ -23,6 +23,10 @@ import com.demo.main.utils.ApiMessages;
 import com.demo.utils.LogCommentary;
 import com.demo.utils.LogHelper;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/comentario")
 public class CommentaryController {
