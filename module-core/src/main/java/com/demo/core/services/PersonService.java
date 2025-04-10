@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.demo.core.entities.Person;
 import com.demo.dto.dto.PersonDTO;
+import com.demo.dto.dto.PersonWithPublicationsDTO;
 
 public interface PersonService {
 	
@@ -17,24 +18,23 @@ public interface PersonService {
 	
 	/**
 	 * 
+	 * @return
+	 */
+	Optional<PersonDTO> getPersonById(Long id);
+	
+	/**
+	 * 
 	 * @param personaId
 	 * @return
 	 */
-	Optional<PersonDTO> getPersonWithPublications(Long personId);
+	Optional<PersonWithPublicationsDTO> getPersonWithPublications(Long personId);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	List<Person> getAllPeopleWithPublications();
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	Optional<PersonDTO> getPersonBasicDetails(Long id);
-	
+	List<PersonWithPublicationsDTO> getAllPeopleWithPublications();
+		
 	/**
 	 * 
 	 * @return

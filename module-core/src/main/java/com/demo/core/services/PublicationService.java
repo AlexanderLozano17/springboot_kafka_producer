@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.demo.core.entities.Publication;
 import com.demo.dto.dto.PublicationDTO;
+import com.demo.dto.dto.PublicationWithCommentsDTO;
 
 public interface PublicationService {
 	
@@ -27,14 +28,7 @@ public interface PublicationService {
 	 * @return
 	 */
 	List<PublicationDTO> getAllPublications();
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	Optional<Publication> getPublicationWithPersonDetails(Long id);
-	
+		
 	/**
 	 * 
 	 * @param id
@@ -54,6 +48,6 @@ public interface PublicationService {
 	 * @param id
 	 * @return
 	 */
-	Optional<PublicationDTO> getPublicationWithComments(Long id);
+	Optional<PublicationWithCommentsDTO> getPublicationWithComments(Long id);
 
 }

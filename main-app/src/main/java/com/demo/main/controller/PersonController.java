@@ -19,13 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.core.entities.Person;
 import com.demo.core.services.PersonService;
 import com.demo.dto.dto.PersonDTO;
+import com.demo.dto.dto.PersonWithPublicationsDTO;
+import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseApi;
 import com.demo.main.utils.ApiMessages;
 import com.demo.utils.LogHelper;
 import com.demo.utils.LogPerson;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@RequestMapping("/api/persona")
+@RequestMapping("/api/person")
+@Tag(name = "Person", description = "Operaciones relacionadas con personas")
 public class PersonController {
 	
 	private final Logger logger = LoggerFactory.getLogger(PersonController.class);
@@ -33,6 +42,21 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 	
+	@Operation(
+		    summary = "Crear una persona",
+		    description = "Crea una nueva persona con los datos proporcionados.",
+		    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+		        description = "Objeto de persona que contiene datos relacionados.",
+		        required = true,
+		        content = @Content(
+		            schema = @Schema(implementation = PersonDTO.class)
+		        )
+		    ),
+		    responses = {
+		        @ApiResponse(responseCode = "201", description = ApiMessages.SAVE_SUCCESS, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@PostMapping("/create")
     public ResponseEntity<ResponseApi<PersonDTO>> createPerson(@RequestBody Person person) {
         logger.info(LogHelper.start(getClass(), "createPerson"));
@@ -51,30 +75,46 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
     }
 
-
+	@Operation(
+		    summary = "Obtener persona por ID",
+		    description = "Devuelve una persona específica por su ID.",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@GetMapping("/{id}")
-	public ResponseEntity<ResponseApi<PersonDTO>> getPersonBasicDetails(@PathVariable Long id) {
-		 logger.info(LogHelper.start(getClass(), "getPersonBasicDetails"));
+	public ResponseEntity<ResponseApi<PersonDTO>> getPersonById(@PathVariable Long id) {
+		 logger.info(LogHelper.start(getClass(), "getPersonById"));
 		 
 		try {
-			Optional<PersonDTO> person = personService.getPersonBasicDetails(id);
+			Optional<PersonDTO> person = personService.getPersonById(id);
 			if (person.isPresent()) {
-				logger.info(LogHelper.success(getClass(), "getPersonBasicDetails", String.format(LogPerson.PERSON_FOUND, id)));
-				logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+				logger.info(LogHelper.success(getClass(), "getPersonById", String.format(LogPerson.PERSON_FOUND, id)));
+				logger.info(LogHelper.end(getClass(), "getPersonById"));
 				return ResponseEntity.ok(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_FOUND, person.get()));
 			} 
 			
-			logger.warn(LogHelper.warn(getClass(), "getPersonBasicDetails", String.format(LogPerson.PERSON_NOT_FOUND, id)));
-			logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+			logger.warn(LogHelper.warn(getClass(), "getPersonById", String.format(LogPerson.PERSON_NOT_FOUND, id)));
+			logger.info(LogHelper.end(getClass(), "getPersonById"));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseApi(ApiMessages.SUCCESS, ApiMessages.RECORD_NOT_FOUND, null));
 		
 		} catch (Exception e) {
-			logger.error(LogHelper.error(getClass(), "getPersonBasicDetails", e.getMessage()), e);
-			logger.info(LogHelper.end(getClass(), "getPersonBasicDetails"));
+			logger.error(LogHelper.error(getClass(), "getPersonById", e.getMessage()), e);
+			logger.info(LogHelper.end(getClass(), "getPersonById"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
 	
+	@Operation(
+		    summary = "Obtiene un listado de personas",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@GetMapping
 	public ResponseEntity<ResponseApi<List<PersonDTO>>> getAllPersons() {
 		 logger.info(LogHelper.start(getClass(), "getAllPerson"));
@@ -97,13 +137,21 @@ public class PersonController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
 	}
-			
-	@GetMapping("/{personId}/publicaciones")
-	public ResponseEntity<ResponseApi<PersonDTO>> getPersonWithPublications(@PathVariable Long personId) {
+		
+	@Operation(
+		    summary = "Obtener una persona con sus publicaciones",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
+	@GetMapping("/{personId}/publications")
+	public ResponseEntity<ResponseApi<PersonWithPublicationsDTO>> getPersonWithPublications(@PathVariable Long personId) {
 		logger.info(LogHelper.start(getClass(), "getPersonWithPublications"));
 		
 		try {			
-			Optional<PersonDTO> personPublicationDTO = personService.getPersonWithPublications(personId);			
+			Optional<PersonWithPublicationsDTO> personPublicationDTO = personService.getPersonWithPublications(personId);		
 			if (personPublicationDTO.isPresent()) {
 
 				logger.info(LogHelper.success(getClass(), "getPersonWithPublications", String.format(LogPerson.PERSON_FOUND, personId)));
@@ -122,12 +170,20 @@ public class PersonController {
 		}
 	}
 	
-	@GetMapping("/publicaciones")
-	public ResponseEntity<ResponseApi<List<Person>>> getAllPeopleWithPublications() {
+	@Operation(
+		    summary = "Obtener un listado de personas con sus publicaciones",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
+	@GetMapping("/publications")
+	public ResponseEntity<ResponseApi<List<PersonWithPublicationsDTO>>> getAllPeopleWithPublications() {
 		logger.info(LogHelper.start(getClass(), "getAllPeopleWithPublications"));
 		
 		try {			
-			List<Person> personPublications = personService.getAllPeopleWithPublications();			
+			List<PersonWithPublicationsDTO> personPublications = personService.getAllPeopleWithPublications();			
 			if (!personPublications.isEmpty()) {
 				logger.info(LogHelper.success(getClass(), "getAllPeopleWithPublications", String.format(LogPerson.PERSON_LIST_SUCCESS, personPublications.size())));
 				logger.info(LogHelper.end(getClass(), "getAllPeopleWithPublications"));
@@ -145,6 +201,14 @@ public class PersonController {
 		}
 	}
 	
+	@Operation(
+		    summary = "elimina una persona",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ResponseApi<String>> deletePersonById(@PathVariable long id) {
 		logger.info(LogHelper.start(getClass(), "deletePersonById"));
@@ -164,6 +228,5 @@ public class PersonController {
 			logger.info(LogHelper.end(getClass(), "deletePersonById"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 		}
-		
 	}
 }

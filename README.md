@@ -17,6 +17,7 @@ El proyecto de **Spring Boot** está desarrollado de manera **modular**, lo que 
 | **Apache Kafka**    | Plataforma distribuida de mensajería                      |
 | **Kafka UI**        | Interfaz gráfica para gestionar Kafka                     |
 | **Zookeeper**       | Coordinador de servicios para Kafka                       |
+| **OpenAPI** 		  | Documentación interactiva de la API REST 				  |
 | **Docker**          | Contenedorización de la aplicación                        |
 | **Docker Compose**  | Orquestación de contenedores                              |
 | **Jackson**         | Serialización y deserialización JSON                      |
@@ -115,4 +116,9 @@ Para crear los topics en Kafka, usa:
 docker exec -it kafka1 kafka-topics.sh --create --topic topic-persons --bootstrap-server kafka1:9092 --partition 3 --replication-factor 1
 docker exec -it kafka1 kafka-topics.sh --create --topic topic-publications --bootstrap-server kafka1:9092 --partition 3 --replication-factor 1
 docker exec -it kafka1 kafka-topics.sh --create --topic topic-commentaries --bootstrap-server kafka1:9092 --partition 3 --replication-factor 1
+```
+### ✅ **URL Documentación interactiva de la API REST **
+
+```
+http://localhost:8081/swagger-ui/index.html
 ```

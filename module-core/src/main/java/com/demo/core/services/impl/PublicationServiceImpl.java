@@ -1,5 +1,6 @@
 package com.demo.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import com.demo.core.repositories.PublicationRepository;
 import com.demo.core.services.PublicationService;
 import com.demo.dto.dto.CommentaryDTO;
 import com.demo.dto.dto.PublicationDTO;
+import com.demo.dto.dto.PublicationWithCommentsDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPublicationService;
 import com.demo.utils.LogHelper;
@@ -59,51 +61,40 @@ public class PublicationServiceImpl implements PublicationService {
 	@Transactional(readOnly = true)
 	public Optional<PublicationDTO> getPublicationById(Long id) {
 		logger.info(LogHelper.start(getClass(), "getPublicationById"));		
-		return Optional.of(publicationRepository.getPublicationById(id).get());
+		
+		Optional<Publication> publication = publicationRepository.findById(id);
+		PublicationDTO publicationDTO = publicationDTO(publication.get());
+		
+		if (publication.isPresent()) {
+			logger.info(LogHelper.success(getClass(), "getPublicationById", String.format(LogPerson.PERSON_FOUND, publicationDTO.getId())));
+		} else {
+			logger.warn(LogHelper.warn(getClass(), "getPublicationById", String.format(LogPerson.PERSON_NOT_FOUND, publicationDTO.getId())));
+		}		
+		return Optional.of(publicationDTO);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<PublicationDTO> getPublicationWithComments(Long id) {
+	public Optional<PublicationWithCommentsDTO> getPublicationWithComments(Long id) {
 		logger.info(LogHelper.start(getClass(), "getPublicationWithComments"));		
 		
 		Publication publication = publicationRepository.findById(id).get();
 		
-		PublicationDTO publicationDTO = new PublicationDTO(publication.getId(), 
-														publication.getTitle(),
-														publication.getContent(), 
-														publication.getDatePublication());
+		PublicationWithCommentsDTO PublicationWithCommentsDTO = publicationWithCommentsDTO(publication);
 		
-		List<CommentaryDTO> commentaryDTOs = publication.getCommentaries().stream()
-				.map(commentary -> new CommentaryDTO(commentary.getId(), 
-													commentary.getPublication().getId(), 
-													commentary.getPerson().getId(), 
-													commentary.getDateCommentary(), 
-													commentary.getContent())).collect(Collectors.toList());
-		publicationDTO.setCommentaries(commentaryDTOs);
-		
-		return Optional.of(publicationDTO);
+		return Optional.of(PublicationWithCommentsDTO);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<PublicationDTO> getAllPublications() {
 		logger.info(LogHelper.start(getClass(), "getAllPublications"));
-		return publicationRepository.getPublications();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Optional<Publication> getPublicationWithPersonDetails(Long id) {
-		logger.info(LogHelper.start(getClass(), "getPublicationWithPersonDetails"));
 		
-		try {
-			return publicationRepository.findById(id);
-		} catch (Exception e) {
-			logger.info(LogHelper.error(getClass(), "findById", String.format(String.format(LogPublication.PUBLICATION_LIST_ERROR, id), e.getMessage())), e);
-			logger.error("Error al obtener las publicacione registro con ID {}", id, e.getMessage(), e);
-			return Optional.empty();
-		}
+		List<Publication> listPublication = publicationRepository.findAll();
+		
+		List<PublicationDTO> publicationDTOs = getPublicationDTO(listPublication);
+		
+		return publicationDTOs;
 	}
 
 	@Override
@@ -134,7 +125,7 @@ public class PublicationServiceImpl implements PublicationService {
 	 */
 	private PublicationDTO publicationDTO(Publication publication) {
 		logger.info(LogHelper.start(getClass(), "publicationDTO"));
-		
+		if (publication == null) return null;
 		return new PublicationDTO(publication.getId(), 
 				publication.getTitle(), 
 				publication.getContent(),
@@ -147,6 +138,32 @@ public class PublicationServiceImpl implements PublicationService {
 	 */
 	private List<PublicationDTO> getPublicationDTO(List<Publication> listPublication) {
 		logger.info(LogHelper.start(getClass(), "getPublicationDTO"));
+		if (listPublication.size() == 0) return new ArrayList<>();
 		return listPublication.stream().map(publication -> publicationDTO(publication)).collect(Collectors.toList()); 
 	}
+	
+	/**
+	 * 
+	 * @param publication
+	 * @return
+	 */
+	private PublicationWithCommentsDTO publicationWithCommentsDTO(Publication publication) {
+		logger.info(LogHelper.start(getClass(), "publicationWithCommentsDTO"));
+		
+		List<CommentaryDTO> listCommentaryDTOs = publication.getCommentaries().stream()
+				.map(commentary -> new CommentaryDTO(commentary.getId(), 
+					commentary.getPublication().getId(), 
+					commentary.getPerson().getId(), 
+					commentary.getDateCommentary(), 
+					commentary.getContent())).collect(Collectors.toList());
+		
+		PublicationWithCommentsDTO publicationWithCommentsDTO = new PublicationWithCommentsDTO(publication.getId(), 
+				publication.getTitle(),
+				publication.getContent(), 
+				publication.getDatePublication(),
+				listCommentaryDTOs);
+		
+		return publicationWithCommentsDTO;
+	}
+	
 }

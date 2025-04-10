@@ -1,5 +1,6 @@
 package com.demo.core.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,12 +14,12 @@ import com.demo.core.entities.Person;
 import com.demo.core.repositories.PersonRepository;
 import com.demo.core.services.PersonService;
 import com.demo.dto.dto.PersonDTO;
+import com.demo.dto.dto.PersonWithPublicationsDTO;
 import com.demo.dto.dto.PublicationDTO;
 import com.demo.dto.dto.ResponseKafka;
 import com.demo.producer.services.KafkaProducerPersonService;
 import com.demo.utils.LogHelper;
 import com.demo.utils.LogPerson;
-import com.demo.utils.LogPublication;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -53,51 +54,72 @@ public class PersonServiceImpl implements PersonService {
 			return Optional.empty();
 		}
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<PersonDTO> getPersonById(Long id) {
+		logger.info(LogHelper.start(getClass(), "getPersonById"));		
+				
+		Optional<Person> person = personRepository.findById(id);
+		PersonDTO personDTO = personDTO(person.get());
+		
+		if (person.isPresent()) {
+			logger.info(LogHelper.success(getClass(), "getPersonById", String.format(LogPerson.PERSON_FOUND, id)));
+			
+		} else {
+			logger.warn(LogHelper.warn(getClass(), "getPersonById", String.format(LogPerson.PERSON_NOT_FOUND, id)));
+		}
+		logger.info(LogHelper.end(getClass(), "getPersonById"));
+		return Optional.of(personDTO);
+		
+	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<PersonDTO> getPersonWithPublications(Long id) {
+	public Optional<PersonWithPublicationsDTO> getPersonWithPublications(Long id) {
 		logger.info(LogHelper.start(getClass(), "getPersonWithPublications"));
 		
 		Optional<Person> personWithPublications = personRepository.findById(id);
 		
-		PersonDTO personDTO = new  PersonDTO(personWithPublications.get().getId(), 
-				personWithPublications.get().getNames(), 
-				personWithPublications.get().getLastNames(),
-				personWithPublications.get().getAge(), 
-				personWithPublications.get().getEmail(), 
-				personWithPublications.get().getTelephone());
+		PersonWithPublicationsDTO personWithPublicationsDTO = personWithPublicationsDTO(personWithPublications.get());
 		
-		List<PublicationDTO> listPublicationsDTO = personWithPublications.get().getPublications().stream()
-				.map(publication -> new PublicationDTO(publication.getId(),
-						publication.getTitle(), 
-						publication.getContent(), 
-						publication.getDatePublication())).collect(Collectors.toList());
-		
-		personDTO.setPublications(listPublicationsDTO);	
-		
-		return Optional.of(personDTO);
+		return Optional.of(personWithPublicationsDTO);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Person> getAllPeopleWithPublications() {
+	public List<PersonWithPublicationsDTO> getAllPeopleWithPublications() {
 		logger.info(LogHelper.start(getClass(), "getAllPeopleWithPublications"));
-		return personRepository.findAll();
+		
+		List<Person> listPerson = personRepository.findAll();
+		
+		List<PersonWithPublicationsDTO> personWithPublicationsDTOs = listPerson.stream()
+				.map(personWithPublications -> personWithPublicationsDTO(personWithPublications))
+				.collect(Collectors.toList());		
+		
+		if (!listPerson.isEmpty()) {
+			logger.info(LogHelper.success(getClass(), "getAllPeopleWithPublications", String.format(LogPerson.PERSON_LIST_SUCCESS, personWithPublicationsDTOs.size())));
+		} else {
+			logger.warn(LogHelper.warn(getClass(), "getAllPeopleWithPublications", LogPerson.PERSON_NOT_CONTENT));
+		}
+		return personWithPublicationsDTOs;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<PersonDTO> getAllPersons() {
 		logger.info(LogHelper.start(getClass(), "getAllPersons"));
-		return personRepository.getAllPerons();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Optional<PersonDTO> getPersonBasicDetails(Long id) { 
-		logger.info(LogHelper.start(getClass(), "getPersonBasicDetails"));
-		return personRepository.findPersonBasicById(id);
+		
+		List<Person> listPerson = personRepository.findAll();
+		List<PersonDTO> listPersonDTOs = getListPersonDTO(listPerson);
+		if (!listPerson.isEmpty()) {
+			logger.info(LogHelper.success(getClass(), "getAllPersons", String.format(LogPerson.PERSON_LIST_SUCCESS, listPerson.size())));
+			
+		} else {
+			logger.warn(LogHelper.warn(getClass(), "getAllPersons", LogPerson.PERSON_NOT_CONTENT));
+		}
+		logger.info(LogHelper.end(getClass(), "getAllPersons"));	
+		return listPersonDTOs;
 	}
 	
 	@Override
@@ -122,6 +144,7 @@ public class PersonServiceImpl implements PersonService {
 	 */
 	private PersonDTO personDTO(Person person) {
 		logger.info(LogHelper.start(getClass(), "personDTO"));
+		if (person == null) return null;
 		return new PersonDTO(person.getId(),
 				person.getNames(), 
 				person.getLastNames(),
@@ -135,8 +158,36 @@ public class PersonServiceImpl implements PersonService {
 	 * @param listPerson
 	 * @return
 	 */
-	private List<PersonDTO> getPersonDTO(List<Person> listPerson) {
+	private List<PersonDTO> getListPersonDTO(List<Person> listPerson) {
 		logger.info(LogHelper.start(getClass(), "getPersonDTO"));
+		if (listPerson.size() == 0) return new ArrayList<PersonDTO>(); 
 		return listPerson.stream().map(person -> personDTO(person)).collect(Collectors.toList());
+	}
+	
+	/**
+	 * 
+	 * @param person
+	 * @return
+	 */
+	private PersonWithPublicationsDTO personWithPublicationsDTO(Person person) {
+		logger.info(LogHelper.start(getClass(), "PersonWithPublicationsDTO"));
+		
+		if (person == null) return null;
+		
+		List<PublicationDTO> listPublicationsDTO = person.getPublications().stream()
+				.map(publication -> new PublicationDTO(publication.getId(),
+						publication.getTitle(), 
+						publication.getContent(), 
+						publication.getDatePublication())).collect(Collectors.toList());
+		
+		PersonWithPublicationsDTO personWithPublicationsDTO = new PersonWithPublicationsDTO(person.getId(), 
+				person.getNames(), 
+				person.getLastNames(),
+				person.getAge(), 
+				person.getEmail(), 
+				person.getTelephone(),
+				listPublicationsDTO);
+		
+		return personWithPublicationsDTO;
 	}
 }

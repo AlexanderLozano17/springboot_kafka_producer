@@ -23,12 +23,15 @@ import com.demo.main.utils.ApiMessages;
 import com.demo.utils.LogCommentary;
 import com.demo.utils.LogHelper;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/api/comentario")
+@RequestMapping("/api/commentary")
+@Tag(name = "Commentary", description = "Operaciones relacionadas con comentarios")
 public class CommentaryController {
 	
 	private final Logger logger = LoggerFactory.getLogger(CommentaryController.class);
@@ -39,6 +42,20 @@ public class CommentaryController {
 		this.commentaryService = commentaryService;
 	}
 	
+	@Operation(
+		    summary = "Crear un comentario",
+		    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+		        description = "Objeto de comentario que contiene datos relacionados.",
+		        required = true,
+		        content = @Content(
+		            schema = @Schema(implementation = CommentaryDTO.class)
+		        )
+		    ),
+		    responses = {
+		        @ApiResponse(responseCode = "201", description = ApiMessages.SAVE_SUCCESS, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@PostMapping("/create")
 	public ResponseEntity<ResponseApi<CommentaryDTO>> createCommentary(@RequestBody Commentary Commentary) {		
 		logger.info(LogHelper.start(getClass(), "createCommentary"));
@@ -58,6 +75,14 @@ public class CommentaryController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi(ApiMessages.ERROR, ApiMessages.INTERNAL_SERVER_ERROR, null));
 	}
 	
+	@Operation(
+		    summary = "Obtiene un alista de todos los comentarios",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@GetMapping
 	public ResponseEntity<ResponseApi<List<Commentary>>> getAllCommentaries() {
 		logger.info(LogHelper.start(getClass(), "getAllCommentaries"));
@@ -80,6 +105,14 @@ public class CommentaryController {
 		}
 	}
 
+	@Operation(
+		    summary = "Obtiene un comentaio por ID",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseApi<CommentaryDTO>> getCommentaryById(@PathVariable Long id) {
 		logger.info(LogHelper.start(getClass(), "getCommentaryById"));
@@ -102,6 +135,14 @@ public class CommentaryController {
 		}	
 	}
 	
+	@Operation(
+		    summary = "Elimina un comentaio por ID",
+		    responses = {
+		        @ApiResponse(responseCode = "200", description = ApiMessages.RECORD_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "404", description = ApiMessages.RECORD_NOT_FOUND, content = @Content(schema = @Schema(implementation = ResponseApi.class))),
+		        @ApiResponse(responseCode = "500", description = ApiMessages.INTERNAL_SERVER_ERROR, content = @Content(schema = @Schema(implementation = ResponseApi.class)))
+		    }
+		)
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ResponseApi<String>> deleteCommentaryById( @PathVariable Long id) {
 		logger.info(LogHelper.start(getClass(), "deleteCommentaryById"));

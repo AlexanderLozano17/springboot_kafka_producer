@@ -1,6 +1,5 @@
 package com.demo.dto.dto;
 
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,28 +9,32 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public class PublicationDTO implements Serializable {
+public class PublicationWithCommentsDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@JsonProperty("id")
 	private Long id;
-	
+
 	@JsonProperty("title")
 	private String title;
-	
+
 	@JsonProperty("content")
 	private String content;
-	
+
 	@JsonProperty("datePublication")
 	private LocalDate datePublication;
-		
-    public PublicationDTO(Long id, String title, String content, LocalDate datePublication) {
-        this.id = id;
-    	this.title = title;
-        this.content = content;
-        this.datePublication = datePublication;
-    }
+
+	@JsonProperty("commentaries")
+	private List<CommentaryDTO> commentaries = new ArrayList<>();
+
+	public PublicationWithCommentsDTO(Long id, String title, String content, LocalDate datePublication, List<CommentaryDTO> commentaries) {
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.datePublication = datePublication;
+		this.commentaries = commentaries;
+	}
 
 	/**
 	 * @return the id
@@ -89,5 +92,17 @@ public class PublicationDTO implements Serializable {
 		this.datePublication = datePublication;
 	}
 
-}
+	/**
+	 * @return the commentaries
+	 */
+	public List<CommentaryDTO> getCommentaries() {
+		return commentaries;
+	}
 
+	/**
+	 * @param commentaries the commentaries to set
+	 */
+	public void setCommentaries(List<CommentaryDTO> commentaries) {
+		this.commentaries = commentaries;
+	}
+}

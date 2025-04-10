@@ -27,6 +27,7 @@ public final class LogPerson {
 	public static final String PERSON_DELETE_ERROR = "Error al eliminar la persona con ID %s: %s";
 	public static final String PERSON_NOT_FOUND = "Persona no encontrada con ID %s";
 	public static final String PERSON_LIST_ERROR = "Error al obtener el listado de personas: %s";
+	public static final String PERSON_NOT_CONTENT = "No se han encontrado registros";
 	
 	/** ====================================================
 					LOGS DE AUDITORÍA
